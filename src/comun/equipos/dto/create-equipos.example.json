@@ -1,0 +1,10 @@
+{
+    "name": "Nombre del equipo",
+    "description": "Descripción opcional del equipo",
+    "isActive": true,
+    "rules": {
+      "method": "ADD",
+      "comparisonKind": "UNIQUE",
+      "field": ["name"]
+    }
+  }

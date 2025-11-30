@@ -1,0 +1,64 @@
+EJEMPLO DE USO DE authenticateWithLdap EN AuthService
+====================================================
+
+Supón que tienes el siguiente método en tu AuthService:
+
+  async authenticateWithLdap(username: string, password: string): Promise<ReturnDto>
+
+Puedes llamarlo así desde un controlador o desde otro servicio:
+
+----------------------------------------------------
+// Ejemplo en un controlador
+@Post('ldap-login')
+async ldapLogin(@Body() body: { username: string, password: string }) {
+  return this.authService.authenticateWithLdap(body.username, body.password);
+}
+----------------------------------------------------
+
+¿QUÉ DEVUELVE?
+==============
+
+1. **Credenciales correctas y usuario existe en LDAP:**
+------------------------------------------------------
+{
+  isSuccess: true,
+  returnCode: 200, // CodeEnum.OK
+  data: {
+    cn: 'usuario',
+    mail: 'usuario@dominio.com',
+    displayName: 'Nombre Apellido',
+    givenName: 'Nombre',
+    sn: 'Apellido',
+    memberOf: [ ... ]
+    // ...otros atributos LDAP
+  }
+}
+
+2. **Credenciales incorrectas (bind falla):**
+---------------------------------------------
+{
+  isSuccess: false,
+  returnCode: 403, // CodeEnum.FORBIDDEN
+  errorMessage: 'Credenciales LDAP inválidas'
+}
+
+3. **Usuario no encontrado en LDAP:**
+------------------------------------
+{
+  isSuccess: false,
+  returnCode: 403, // CodeEnum.FORBIDDEN
+  errorMessage: 'Usuario no encontrado en LDAP'
+}
+
+4. **Error buscando usuario en LDAP (problema de conexión, búsqueda, etc):**
+---------------------------------------------------------------------------
+{
+  isSuccess: false,
+  returnCode: 403, // CodeEnum.FORBIDDEN
+  errorMessage: 'Error buscando usuario en LDAP'
+}
+
+NOTAS:
+- El método siempre retorna un objeto ReturnDto.
+- Si la autenticación es exitosa, los datos del usuario LDAP están en la propiedad `data`.
+- Si hay error, el mensaje está en `errorMessage` y el código en `returnCode`. 
