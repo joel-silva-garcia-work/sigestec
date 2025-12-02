@@ -165,6 +165,7 @@ UpdateOrdenesDto> {
     notificationDto.destinyType = notifyEnum.USERS;
     // completar aqui
 
+    
     // const users = await this.userRepository.find({
     //   where: {
     //     rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
