@@ -167,40 +167,6 @@ OrdenesService
   }
 
   @UseGuards(JwtGuard)
-  @Put('iniciar-ejecucion-orden')
-  @ApiOperation({ summary: 'Iniciar la ejecución de una orden' })
-  @ApiResponse({ status: 200, description: 'Orden iniciada exitosamente,returnDto.data={object}  '})
-  @ApiResponse({ status: 400, description: 'Orden no encontrada' })
-  async InExecutionOrder(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
-  ) {
-    const clientIp = request.socket.remoteAddress;
-    const ipv4 = clientIp?.replace('::ffff:', '');
-    const executedUrl = request.originalUrl;
-    const traza = new CreateTrazaDto();
-    traza.ip = ipv4;
-    traza.url = executedUrl;
-    traza.traza = dto;
-    return await this.Service.InExecutionOrder(dto, traza);
-  } 
-  @UseGuards(JwtGuard)
-  @Put('cerrar-orden')
-  @ApiOperation({ summary: 'Cerrar una orden' })
-  @ApiResponse({ status: 200, description: 'Orden cerrada exitosamente,returnDto.data={object}  '})
-  @ApiResponse({ status: 400, description: 'Orden no encontrada' })
-  async CloseOrder(@Body(new ValidationPipe({ transform: true })) dto: CloseOrdenDto,
-  @Req() request: Request
-  ) {
-    const clientIp = request.socket.remoteAddress;
-    const ipv4 = clientIp?.replace('::ffff:', '');
-    const executedUrl = request.originalUrl;
-    const traza = new CreateTrazaDto();
-    traza.ip = ipv4;
-    traza.url = executedUrl;
-    traza.traza = dto;
-    return await this.Service.CloseOrder(dto, traza);
-  }
-  @UseGuards(JwtGuard)
   @Get('obtener-ordenes-asignadas')
   @ApiOperation({ summary: 'Obtener las ordenes asignadas' })
   @ApiResponse({ status: 200, description: 'Ordenes asignadas obtenidas exitosamente,returnDto.data={array of objects}  '})

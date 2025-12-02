@@ -13,6 +13,8 @@ import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { ReturnDto } from 'src/common/base/dto';
 import { CloseOrdenDto } from './dto/close-orden.dto';
 import { CodeEnum } from 'src/common/enum/code.enum';
+import { CreateNotificationDto } from 'src/notify/notifications/dto/create-notification.dto';
+import { notifyEnum } from 'src/common/enum/notify.enum';
 
 
 @Injectable()
@@ -131,9 +133,9 @@ UpdateOrdenesDto> {
         }  
       else if (dto.newOrderState === EstadoEnum.NO_POSIBLE && 
         (dto.newRequestState === EstadoEnum.RECHAZADA || dto.newRequestState === EstadoEnum.NO_POSIBLE))
-      {
-        exchange = true
-      }    
+        {
+          exchange = true
+        }    
     } 
      
     if(exchange == false)
@@ -156,6 +158,33 @@ UpdateOrdenesDto> {
 
     // Guardar traza
     await this.trazaRepository.save(traza);
+    // enviar notificaciones a usuario y a Jefe de Taller
+
+    const notificationDto = new CreateNotificationDto();
+    notificationDto.userOrigin = order.tecnico.name;
+    notificationDto.destinyType = notifyEnum.USERS;
+    // completar aqui
+
+    // const users = await this.userRepository.find({
+    //   where: {
+    //     rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
+    //   }
+    // });
+
+    // notificationDto.destinyUser = users.map(user => ({
+    //   id: user.id,
+    //   isReaded: false
+    // }));
+    // // arreglar
+    // notificationDto.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado  ${dto.newRequestState}`;
+
+    // const notification = new Notification()
+    // notification.destinyType = notificationDto.destinyType
+    // notification.destinyUser = notificationDto.destinyUser
+    // notification.userOrigin = notificationDto.userOrigin
+    // notification.message = notificationDto.message
+    // await this.notificationRepository.save(notification)
+
 
     return {
       isSuccess: true,
@@ -172,60 +201,6 @@ UpdateOrdenesDto> {
     });
     const returnDto = new ReturnDto();
     returnDto.data = orders;
-    returnDto.isSuccess = true;
-    return returnDto;
-  }
-
-  async CloseOrder(dto: CloseOrdenDto, traza: CreateTrazaDto) {
-    const returnDto = new ReturnDto();
-
-    const order = await this.repository.findOne({
-      where: { id: dto.id }
-    });
-    if (!order) {
-      returnDto.isSuccess = false;
-      returnDto.errorMessage = 'Orden no encontrada';
-      return returnDto;
-    }
-    order.estado = dto.estado;
-    order.nota = dto.nota;
-    await this.repository.save(order);
-
-    const solicitud = await this.solicitudesRepository.findOne({
-      where: { id: order.solicitud.id }
-    });
-    if(dto.estado === EstadoEnum.REALIZADA) {
-    solicitud.estado = EstadoEnum.REALIZADA;
-    }
-    else
-     solicitud.estado = EstadoEnum.NO_POSIBLE;
-    await this.solicitudesRepository.save(solicitud);
-
-    this.trazaRepository.save(traza);
-    returnDto.data = order;
-    returnDto.isSuccess = true;
-    return returnDto;
-  }
-
-  async InExecutionOrder(dto: IdDto, traza: CreateTrazaDto) {
-    const returnDto = new ReturnDto();
-    const order = await this.repository.findOne({
-      where: { id: dto.id }
-    });
-    if (!order) {
-      returnDto.isSuccess = false;
-      returnDto.errorMessage = 'Orden no encontrada';
-      return returnDto;
-    }
-    order.estado = EstadoEnum.EN_EJECUCION;
-    await this.repository.save(order);
-    const solicitud = await this.solicitudesRepository.findOne({
-      where: { id: order.solicitud.id }
-    });
-    solicitud.estado = EstadoEnum.EN_EJECUCION;
-    await this.solicitudesRepository.save(solicitud);
-    this.trazaRepository.save(traza);
-    returnDto.data = order;
     returnDto.isSuccess = true;
     return returnDto;
   }
