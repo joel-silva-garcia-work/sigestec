@@ -1,4 +1,3 @@
-import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as readline from 'readline';
@@ -88,23 +87,14 @@ async function modifyResource() {
 
     if (schemaExists.length > 0) {
       console.log(`⚠️ El schema '${schemaName}' ya existe.`);
-      // const shouldDrop = await ask('¿Desea eliminarlo y recrearlo? (s/n): ');
-      
-      // if (shouldDrop.toLowerCase() === 's') {
-      //   // Eliminar el schema existente
-      //   await dataSource.query(`DROP SCHEMA IF EXISTS "${schemaName}" CASCADE`);
-      //   console.log(`✅ Schema '${schemaName}' eliminado`);
-      // } else {
-      //   console.log('Operación cancelada');
-      //   await dataSource.destroy();
-      //   rl.close();
-      //   return;
-      // }
     }
-
+    else
+    {
     // Crear el nuevo schema
     await dataSource.query(`CREATE SCHEMA IF NOT EXISTS "${schemaName}"`);
     console.log(`✅ Schema '${schemaName}' creado exitosamente`);
+    }
+
 
     // Cerrar la conexión
     await dataSource.destroy();
@@ -268,7 +258,6 @@ export class Update${className}Dto extends PartialType(Create${className}Dto) {}
     fs.writeFileSync(updateDtoPath, updateDtoContent);
 
     // Generar el module
-    // const modulePath = path.join(process.cwd(), 'src', resourceName, `${resourceName}.module.ts`);
     const moduleContent = `import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ${className} } from './entities/${resourceName}.entity';

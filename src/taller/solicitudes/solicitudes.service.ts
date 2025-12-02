@@ -67,10 +67,12 @@ UpdateSolicitudesDto> {
 
     notificationDto.destinyUser = users.map(user => ({
       id: user.id,
-      isReaded: false
+      isReaded: false,
+      servicioID: (result.data as Solicitudes).id,
+
     }));
     // arreglar
-    notificationDto.message = `Solicitud de reparación ${result.data} ha sido creada por ${createDto.solicitante}`;
+    notificationDto.message = `Solicitud ${result.data} ha sido creada por ${createDto.solicitante}`;
 
     const notification = new Notification()
     notification.destinyType = notificationDto.destinyType

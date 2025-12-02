@@ -183,18 +183,24 @@ UpdateOrdenesDto> {
 
     notificationDto.destinyUser = jefesTaller.map(user => ({
       id: user.id,
-      isReaded: false
+      isReaded: false,
+      servicioID: order.solicitud.id,
+      orderID: order.id,
     }));
     notificationDto.destinyUser.push(
       {
         id: order.tecnico.id,
-        isReaded: false
+        isReaded: false,
+        servicioID: order.solicitud.id,
+        orderID: order.id,
       }
     )
     notificationDto.destinyUser.push(
       {
         id: order.solicitud.solicitante.id,
-        isReaded: false
+        isReaded: false,
+        servicioID: order.solicitud.id,
+        orderID: order.id,
       }
     )
     // arreglar
