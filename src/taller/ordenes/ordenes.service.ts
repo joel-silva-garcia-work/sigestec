@@ -15,6 +15,8 @@ import { CloseOrdenDto } from './dto/close-orden.dto';
 import { CodeEnum } from 'src/common/enum/code.enum';
 import { CreateNotificationDto } from 'src/notify/notifications/dto/create-notification.dto';
 import { notifyEnum } from 'src/common/enum/notify.enum';
+import { User } from 'src/security/user/entities/user.entity';
+import { Notification } from 'src/notify/notifications/entities/notification.entity';
 
 
 @Injectable()
@@ -29,6 +31,10 @@ UpdateOrdenesDto> {
     private readonly trazaRepository: Repository<Traza>,
     @InjectRepository(Solicitudes)
     private readonly solicitudesRepository: Repository<Solicitudes>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Notification)
+    private readonly notificationRepository: Repository<Notification>,
   ) {
     super(repository)
   }
@@ -165,26 +171,41 @@ UpdateOrdenesDto> {
     notificationDto.destinyType = notifyEnum.USERS;
     // completar aqui
 
-    
-    // const users = await this.userRepository.find({
-    //   where: {
-    //     rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
-    //   }
-    // });
+    const jefesTaller = await this.userRepository.find({
+      where:
+      {
+        rol:
+        {id:"019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
+      }
+    });
 
-    // notificationDto.destinyUser = users.map(user => ({
-    //   id: user.id,
-    //   isReaded: false
-    // }));
-    // // arreglar
-    // notificationDto.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado  ${dto.newRequestState}`;
 
-    // const notification = new Notification()
-    // notification.destinyType = notificationDto.destinyType
-    // notification.destinyUser = notificationDto.destinyUser
-    // notification.userOrigin = notificationDto.userOrigin
-    // notification.message = notificationDto.message
-    // await this.notificationRepository.save(notification)
+
+    notificationDto.destinyUser = jefesTaller.map(user => ({
+      id: user.id,
+      isReaded: false
+    }));
+    notificationDto.destinyUser.push(
+      {
+        id: order.tecnico.id,
+        isReaded: false
+      }
+    )
+    notificationDto.destinyUser.push(
+      {
+        id: order.solicitud.solicitante.id,
+        isReaded: false
+      }
+    )
+    // arreglar
+    notificationDto.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado  ${dto.newRequestState}`;
+
+    const notification = new Notification()
+    notification.destinyType = notificationDto.destinyType
+    notification.destinyUser = notificationDto.destinyUser
+    notification.userOrigin = notificationDto.userOrigin
+    notification.message = notificationDto.message
+    await this.notificationRepository.save(notification)
 
 
     return {
