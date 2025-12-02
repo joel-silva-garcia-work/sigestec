@@ -12,6 +12,7 @@ import { EstadoEnum } from './enum/estado.enum';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { ReturnDto } from 'src/common/base/dto';
 import { CloseOrdenDto } from './dto/close-orden.dto';
+import { CodeEnum } from 'src/common/enum/code.enum';
 
 
 @Injectable()
@@ -44,15 +45,27 @@ UpdateOrdenesDto> {
   }
 
   async Add(createDto: CreateOrdenesDto, traza: CreateTrazaDto) {
+    const solicitud = await this.solicitudesRepository.findOne({
+      where:
+      {
+        id: createDto.solicitud
+      }
+    })
+
+    if(solicitud.estado != EstadoEnum.SOLICITADA)
+      {
+        const returnDto = new ReturnDto
+        returnDto.isSuccess = false
+        returnDto.errorCode = CodeEnum.BAD_REQUEST
+        returnDto.errorMessage = "La solicitud no esta en un estado permitido para ser asignada"
+        return returnDto
+      }
     const result = await super.create(createDto);
     if (result.isSuccess) {
       this.trazaRepository.save(traza);
     }
-    const dto = new IdDto();
-    dto.id = createDto.solicitud;
-    const solicitud = await this.solicitudesRepository.findOneBy({
-      id: dto.id,
-    });
+
+
     solicitud.estado = EstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
     return result;
@@ -99,16 +112,47 @@ UpdateOrdenesDto> {
         message: 'Orden no encontrada'
       };
     }
+    let exchange = false 
 
+    // Reglas para cambio de estados
+    // 1 si orden asignada prox estado puede ser 1 en ejecucion  
+    if(order.estado == EstadoEnum.ASIGNADA && 
+      ( dto.newOrderState === EstadoEnum.EN_EJECUCION) &&
+      ( dto.newRequestState === EstadoEnum.EN_EJECUCION)
+    )
+    {
+      exchange = true
+    }
+    // 2 si estado de orden es en ejecucion solo puede pasar a Realizada  o 2 no posible
+    if(order.estado == EstadoEnum.EN_EJECUCION ){
+      if( dto.newOrderState === EstadoEnum.REALIZADA && dto.newRequestState === EstadoEnum.REALIZADA)
+        {
+          exchange = true
+        }  
+      else if (dto.newOrderState === EstadoEnum.NO_POSIBLE && 
+        (dto.newRequestState === EstadoEnum.RECHAZADA || dto.newRequestState === EstadoEnum.NO_POSIBLE))
+      {
+        exchange = true
+      }    
+    } 
+     
+    if(exchange == false)
+    {
+      const returnDto = new ReturnDto
+      returnDto.isSuccess = false
+      returnDto.errorMessage = "El estado de la orden no es posible cambiar"
+      returnDto.errorCode = CodeEnum.BAD_REQUEST
+      return returnDto
+    }
     // Cambiar estado de la orden
     order.estado = dto.newOrderState;
     await this.repository.save(order);
-
+    
     // Cambiar estado de la solicitud asociada
-    if (order.solicitud) {
-      order.solicitud.estado = dto.newRequestState;
-      await this.solicitudesRepository.save(order.solicitud);
-    }
+    const solicitud = order.solicitud
+    solicitud.estado = dto.newRequestState;
+    await this.solicitudesRepository.save(solicitud);
+    
 
     // Guardar traza
     await this.trazaRepository.save(traza);

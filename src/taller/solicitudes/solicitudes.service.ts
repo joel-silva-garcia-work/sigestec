@@ -119,6 +119,14 @@ UpdateSolicitudesDto> {
         message: 'Solicitud no encontrada'
       };
     }
+    if(solicitud.estado != EstadoEnum.REALIZADA)
+    {
+      const returnDto = new ReturnDto
+      returnDto.errorCode = CodeEnum.BAD_REQUEST
+      returnDto.isSuccess = false
+      returnDto.errorMessage = "El estado de la orden no es Realizada"
+      return returnDto
+    }
     solicitud.evaluacion = dto.evaluacion;
     solicitud.nota = dto.nota;
     solicitud.estado = EstadoEnum.EVALUADA;
