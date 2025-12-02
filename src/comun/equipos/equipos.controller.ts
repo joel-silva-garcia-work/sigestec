@@ -75,7 +75,7 @@ EquiposService
     return this.Service.findOneActive(dto);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en equipos' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
@@ -95,7 +95,7 @@ EquiposService
     return await this.Service.Add(createDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en equipos' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
@@ -115,7 +115,7 @@ EquiposService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de equipos' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})

@@ -26,7 +26,7 @@
     "generate": "node generate-resource.js",
     "generate:schema": "ts-node scripts/generate-postgres-schema.ts",
     "generate:resource": "nest g resource && ts-node scripts/modify-resource.ts",
-    "create:super-admin": "ts-node scripts/create-super-admin-role.ts",
+    "create:roles": "ts-node scripts/create-roles.ts",
     "generate:keys": "node scripts/generate-keys.js"
   },
   "dependencies": {

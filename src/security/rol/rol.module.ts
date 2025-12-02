@@ -5,6 +5,8 @@ import { RolService } from './rol.service';
 import { RolController } from './rol.controller';
 import { User } from '../user/entities/user.entity';
 import { UserModule } from '../user/user.module';
+import { SuperAdminInitService } from './role-init.service';
+import { RoleSyncService } from './role-sync.service';
 
 
 @Module({

@@ -21,6 +21,7 @@ import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
 import { User } from './entities/user.entity';
+import { ProfileUserDto } from './dto/profile-user.dto';
 
 @ApiTags('user')
 @Controller('usuarios')
@@ -44,7 +45,7 @@ UserService
     return super.findActiveItems();
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en user' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
@@ -136,4 +137,28 @@ UserService
     // Llamar al método delete de la clase base, pasando el request  
     return await this.Service.Delete(dto, traza);
   }
+
+    // @UseGuards(JwtGuard)
+    @Put('perfil')
+    @ApiOperation({ summary: 'Activar/Desactivar un item de user' })
+    @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
+    @ApiResponse({ status: 400, description: 'Item no encontrado' })
+    async Profile(@Body(new ValidationPipe({ transform: true })) dto: ProfileUserDto,
+    @Req() request: Request,
+    @GetUser() user: User
+    ) {
+  
+      // Obtener la IP del cliente
+      const clientIp = request.socket.remoteAddress; // Usar socket.remoteAddress en lugar de connection.remoteAddress
+      const ipv4 = clientIp?.replace('::ffff:', ''); // Extraer la parte IPv4 si está en formato IPv6
+      // Obtener la URL que se ejecutó
+      const executedUrl = request.originalUrl;
+      const traza = new CreateTrazaDto();
+      traza.ip = ipv4;
+      traza.url = executedUrl;
+      traza.traza = dto; // Asignar la traza sin la propiedad 'rules'
+  
+      // Llamar al método create de la clase base, pasando el request  
+      return await this.Service.Profile(dto, traza);
+    }
 }

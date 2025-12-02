@@ -59,7 +59,7 @@ UpdateSolicitudesDto> {
     
     const users = await this.userRepository.find({
       where: {
-        rol: {name: "Jefe de Taller"}
+        rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
       }
     });
 

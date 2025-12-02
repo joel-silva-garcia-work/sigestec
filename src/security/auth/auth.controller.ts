@@ -47,7 +47,6 @@ export class AuthController {
     return this.authSetvice.login(dto);
   }
 
-  
   @UseGuards(JwtGuard)
   @HttpCode(HttpStatus.OK)
   @Post('salir')

@@ -1,20 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseServiceCRUD } from 'src/common/base/class/base.service.crud.class';
 import { Rol } from './entities/rol.entity';
 import { CreateRolDto, UpdateRolDto, UpdateRolWithPermissionsDto } from './dto';
 import { IdDto } from 'src/common/base/dto/id.dto';
-import { User } from '../user/entities/user.entity';
+import { RoleSyncService } from './role-sync.service';
 
 @Injectable()
 export class RolService extends BaseServiceCRUD<
 Rol,
 CreateRolDto,
-UpdateRolDto> {
+UpdateRolDto>{
   constructor(
     @InjectRepository(Rol)
     private readonly repository: Repository<Rol>,
+
+
   ) {
     super(repository)
   }
@@ -45,4 +47,6 @@ UpdateRolDto> {
   override async active(dto: IdDto) {
     return super.active(dto);
   }
+
+
 }

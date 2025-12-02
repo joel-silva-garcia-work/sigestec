@@ -1,7 +1,9 @@
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsDate, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsDate, IsOptional, IsUUID, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseExtendedDto } from 'src/common/base/dto/base.dto';
 import { DTO_MESSAGES } from 'src/common/resource/dto.messages';
+import { TipoEnum } from '../enum/tipo.enum';
+import { EstadoEnum } from '../enum/estado.enum';
 
 export class CreateSolicitudesDto extends BaseExtendedDto {
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
@@ -10,25 +12,16 @@ export class CreateSolicitudesDto extends BaseExtendedDto {
 
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
   @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
+  @IsUUID()
   solicitador: string;
 
   @IsOptional()
-  @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
   tecnico?: string;
 
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
-  @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
-  tipo: string;
+  @IsEnum(TipoEnum)
+  tipo: TipoEnum;
 
-  @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
-  @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
-  estado: string;
-
-  @IsOptional()
-  @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
-  evaluacion?: string;
-
-  @IsOptional()
-  @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
-  nota?: string;
+  @IsEnum(EstadoEnum)
+  estado: EstadoEnum  = EstadoEnum.SOLICITADA;
 }

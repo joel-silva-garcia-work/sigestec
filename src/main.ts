@@ -8,7 +8,7 @@ import Debugger from 'debug'
 import { json, urlencoded } from 'body-parser';
 
 
-const debug = Debugger('sigedoc:main')
+const debug = Debugger('sigestec:main')
 
 
 async function bootstrap() {
