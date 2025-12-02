@@ -80,6 +80,7 @@ UpdateUserDto> {
     if(dto.password != dto.confirmation)
     {
       const returnDto = new ReturnDto
+      returnDto.isSuccess = false
       returnDto.errorCode = 400
       returnDto.returnCode = CodeEnum.BAD_REQUEST
       returnDto.errorMessage = "La confirmacion no es igual al password nuevo"

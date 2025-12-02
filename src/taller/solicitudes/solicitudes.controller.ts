@@ -77,7 +77,7 @@ SolicitudesService
     return this.Service.findOneActive(dto);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en solicitudes' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
@@ -162,7 +162,7 @@ SolicitudesService
   ) {
     return await this.Service.GetRequests(dto);
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put('rechazar-solicitud')
   @ApiOperation({ summary: 'Rechazar una solicitud' })
   @ApiResponse({ status: 200, description: 'Solicitud rechazada exitosamente,returnDto.data={object}  '})

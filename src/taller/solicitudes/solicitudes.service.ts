@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { generateString, InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseServiceCRUD } from 'src/common/base/class/base.service.crud.class';
 import { Solicitudes } from './entities/solicitudes.entity';
@@ -14,6 +14,7 @@ import { User } from 'src/security/user/entities/user.entity';
 import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
 import { EstadoEnum } from './enum/estado.enum';
 import { ReturnDto } from 'src/common/base/dto';
+import { CodeEnum } from 'src/common/enum/code.enum';
 
 
 @Injectable()
@@ -48,13 +49,14 @@ UpdateSolicitudesDto> {
   }
 
   async Add(createDto: CreateSolicitudesDto, traza: CreateTrazaDto) {
+    createDto.codigo = await this.createCode()
     const result = await super.create(createDto);
     if (result.isSuccess) {
       this.trazaRepository.save(traza);
     }
     
     const notificationDto = new CreateNotificationDto();
-    notificationDto.userOrigin = createDto.solicitador;
+    notificationDto.userOrigin = createDto.solicitante;
     notificationDto.destinyType = notifyEnum.USERS;
     
     const users = await this.userRepository.find({
@@ -68,7 +70,7 @@ UpdateSolicitudesDto> {
       isReaded: false
     }));
     // arreglar
-    notificationDto.message = `Solicitud de reparación ${result.data} ha sido creada por ${createDto.solicitador}`;
+    notificationDto.message = `Solicitud de reparación ${result.data} ha sido creada por ${createDto.solicitante}`;
 
     const notification = new Notification()
     notification.destinyType = notificationDto.destinyType
@@ -152,6 +154,14 @@ UpdateSolicitudesDto> {
         data: null,
         errorMessage: 'Solicitud no encontrada'
       };
+    }
+    if(solicitud.estado != EstadoEnum.SOLICITADA)
+    {
+      const returnDto = new ReturnDto
+      returnDto.isSuccess = false
+      returnDto.errorMessage ="La solicitud no esta en estado solicitada"
+      returnDto.errorCode = CodeEnum.BAD_REQUEST
+      return returnDto
     }
     solicitud.estado = EstadoEnum.RECHAZADA;
     await this.repository.save(solicitud);
@@ -246,4 +256,31 @@ UpdateSolicitudesDto> {
     returnDto.isSuccess = true;
     return returnDto;
   }
+  
+  async createCode(){
+    let exist = true
+    let code = generateString()
+    while(exist)
+    {
+      
+      console.log(code)
+      const solicitud = await this.repository.findOne({
+        where:
+        {
+          codigo:code
+        }
+      })
+      if(!solicitud)
+      {
+        exist = false
+      }
+     else
+     {
+      code = generateString()
+     } 
+    }
+    return code
+  }
+
+
 }
