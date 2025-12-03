@@ -71,8 +71,13 @@ UpdateSolicitudesDto> {
       servicioID: (result.data as Solicitudes).id,
 
     }));
-    // arreglar
-    notificationDto.message = `Solicitud ${result.data} ha sido creada por ${createDto.solicitante}`;
+    // revisar que esta salvando
+    const user = await this.userRepository.findOne({
+      where: {
+        id: createDto.solicitante
+      }
+    });
+    notificationDto.message = `Solicitud ${result.data} ha sido creada por ${user.name}`;
 
     const notification = new Notification()
     notification.destinyType = notificationDto.destinyType
