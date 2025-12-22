@@ -1,6 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { BasicInformationEntity } from 'src/common/base/entities';
 import { Rol } from 'src/security/rol/entities/rol.entity';
+import { Aft } from 'src/comun/aft/entities/aft.entity';
 
 @Entity({ name: 'user', schema: 'security' })
 export class User extends BasicInformationEntity {
@@ -24,6 +25,9 @@ export class User extends BasicInformationEntity {
  
   @ManyToOne(() => Rol, {eager:true})
    rol: Rol;
+
+   @OneToMany(() => Aft, aft => aft.user)
+   afts: Aft[];
 
   toRecord(): Record<string, any> {
     return {

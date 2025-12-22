@@ -4,6 +4,8 @@ import { Rol } from 'src/security/rol/entities/rol.entity';
 import { Traza } from 'src/security/trazas/entities/traza.entity';
 
 //import
+import { Departamentos } from './src/comun/departamentos/entities/departamentos.entity';
+import { Aft } from './src/comun/aft/entities/aft.entity';
 import { Ordenes } from './src/taller/ordenes/entities/ordenes.entity';
 import { Solicitudes } from './src/taller/solicitudes/entities/solicitudes.entity';
 import { Equipos } from './src/comun/equipos/entities/equipos.entity';
@@ -25,9 +27,9 @@ export const config: TypeOrmModuleOptions = {
   entities: [
     Traza,
     Rol,
-
-
     //////------- New tables
+    Departamentos,
+    Aft,
     Ordenes,
     Solicitudes,
     Equipos,

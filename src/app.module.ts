@@ -1,4 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
+import { DepartamentosModule } from './comun/departamentos/departamentos.module';
+import { AftModule } from './comun/aft/aft.module';
 import { OrdenesModule } from './taller/ordenes/ordenes.module';
 import { SolicitudesModule } from './taller/solicitudes/solicitudes.module';
 import { EquiposModule } from './comun/equipos/equipos.module';
@@ -33,6 +35,8 @@ import { NotificationsModule } from './notify/notifications/notifications.module
     EquiposModule,
     SolicitudesModule,
     OrdenesModule,
+    AftModule,
+    DepartamentosModule,
   ],
   controllers: [],
   providers: [],

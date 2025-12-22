@@ -5,6 +5,7 @@ import { EstadoEnum } from '../enum/estado.enum';
 import { EvalEnum } from '../enum/eval.enum';
 import { User } from 'src/security/user/entities/user.entity';
 import { Equipos } from 'src/comun/equipos/entities/equipos.entity';
+import { Aft } from 'src/comun/aft/entities/aft.entity';
 
 @Entity({ name: 'solicitudes', schema: 'taller' })
 export class Solicitudes extends BasicInformationEntity {
@@ -12,10 +13,10 @@ export class Solicitudes extends BasicInformationEntity {
   @Column({ nullable: false })
   codigo: string;
 
-  @ManyToOne(() => Equipos, {eager:true, nullable: false})
-  // @JoinColumn({ name: 'equipo' })
-  equipo: Equipos;
-
+  @ManyToOne(() => Aft, {eager:true, nullable: true})
+  @JoinColumn({ name: 'aft_id' })
+  aft: Aft;
+  
   @ManyToOne(() => User, {eager:true, nullable: true})
   //(user) => user.tecnicos)
   // @JoinColumn({ name: 'user' })
