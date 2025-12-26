@@ -1,5 +1,5 @@
 import { Entity, Column } from 'typeorm';
-import { BasicInformationEntity } from 'src/common/base/entities';
+import { BasicInformationEntity } from '../../../common/base/entities';
 
 @Entity({ name: 'configuration', schema: 'config' })
 export class Configuration extends BasicInformationEntity {

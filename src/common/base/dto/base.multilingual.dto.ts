@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { MultilanguageDto } from "./multilanguage.dto";
 import { IsBoolean, IsOptional, IsString } from "class-validator";
-import { DTO_MESSAGES } from "src/common/resource/dto.messages";
+import { DTO_MESSAGES } from "./../../../common/resource/dto.messages";
 import { RulesDto } from "./rules.dto";
 
 export class BaseMultilingualExtendedDto {

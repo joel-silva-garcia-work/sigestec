@@ -1,5 +1,5 @@
 import { IsString, IsUUID } from "class-validator";
-import { DTO_MESSAGES } from "src/common/resource/dto.messages";
+import { DTO_MESSAGES } from "../../../common/resource/dto.messages";
 
 export class IdDto {
   @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})

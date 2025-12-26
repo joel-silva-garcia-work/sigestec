@@ -24,7 +24,7 @@ import { AuthResponseDto } from './dto/auth-response.dto';
 // import { User } from '../user/entities/user.entity';
 
 @ApiTags('Authentication')
-@Controller('autenticacion')
+@Controller('security/auth')
 export class AuthController {
   constructor(private authSetvice: AuthService) {}
 

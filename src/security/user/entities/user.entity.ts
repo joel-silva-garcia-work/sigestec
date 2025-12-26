@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
-import { BasicInformationEntity } from 'src/common/base/entities';
-import { Rol } from 'src/security/rol/entities/rol.entity';
-import { Aft } from 'src/comun/aft/entities/aft.entity';
+import { BasicInformationEntity } from '../../../common/base/entities';
+import { Rol } from '../../../security/rol/entities/rol.entity';
+import { Aft } from '../../../comun/aft/entities/aft.entity';
 
 @Entity({ name: 'user', schema: 'security' })
 export class User extends BasicInformationEntity {

@@ -1,10 +1,10 @@
 import { Controller, Patch, Post } from '@nestjs/common';
-import { BaseControllerCRUD } from 'src/common/base/class/base.controller.crud.class';
+import { BaseControllerCRUD } from '../../common/base/class/base.controller.crud.class';
 import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse, ApiBody } from '@nestjs/swagger';
 import { CreateDepartamentosDto, UpdateDepartamentosDto } from './dto';
 import { DepartamentosService } from './departamentos.service';
-import { IdDto } from 'src/common/base/dto/id.dto';
-import { CreateTrazaDto } from 'src/security/trazas/dto/create-traza.dto';
+import { IdDto } from '../../common/base/dto/id.dto';
+import { CreateTrazaDto } from '../../security/trazas/dto/create-traza.dto';
 
 import { Request } from 'express';
 import { 
@@ -16,12 +16,12 @@ import {
   Req,
   Param,
 } from '@nestjs/common';
-import { JwtGuard } from 'src/security/auth/guard';
-import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
-import { ReturnDto } from 'src/common/base/dto';
+import { JwtGuard } from '../../security/auth/guard';
+import { RouteAccessGuard } from '../../common/guards/route-access.guard';
+import { ReturnDto } from '../../common/base/dto';
 
 @ApiTags('departamentos')
-@Controller('departamentos')
+@Controller('comun/departamentos')
 export class DepartamentosController extends BaseControllerCRUD<
 CreateDepartamentosDto,
 UpdateDepartamentosDto,

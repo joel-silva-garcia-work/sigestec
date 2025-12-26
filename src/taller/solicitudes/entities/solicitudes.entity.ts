@@ -1,11 +1,10 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { BasicInformationEntity } from 'src/common/base/entities';
+import { BasicInformationEntity } from './../../../common/base/entities';
 import { TipoEnum } from '../enum/tipo.enum';
 import { EstadoEnum } from '../enum/estado.enum';
 import { EvalEnum } from '../enum/eval.enum';
-import { User } from 'src/security/user/entities/user.entity';
-import { Equipos } from 'src/comun/equipos/entities/equipos.entity';
-import { Aft } from 'src/comun/aft/entities/aft.entity';
+import { User } from './../../../security/user/entities/user.entity';
+import { Aft } from './../../../comun/aft/entities/aft.entity';
 
 @Entity({ name: 'solicitudes', schema: 'taller' })
 export class Solicitudes extends BasicInformationEntity {

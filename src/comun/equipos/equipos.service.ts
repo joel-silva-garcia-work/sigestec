@@ -24,22 +24,22 @@ UpdateEquiposDto> {
   }
 
   override async findAllItems() {
-    return super.findAllItems();
+    return await super.findAllItems();
   }
 
 
   override async findActiveItems() {
-    return super.findActiveItems();
+    return await super.findActiveItems();
   }
 
   override async findOne(id: IdDto) {
-    return super.findOne(id);
+    return await super.findOne(id);
   }
 
   async Add(createDto: CreateEquiposDto, traza: CreateTrazaDto) {
     const result = await super.create(createDto);
     if (result.isSuccess) {
-      this.trazaRepository.save(traza);
+      await this.trazaRepository.save(traza);
     }
     return result;
   }

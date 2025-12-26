@@ -26,8 +26,8 @@
     "generate": "node generate-resource.js",
     "generate:schema": "ts-node scripts/generate-postgres-schema.ts",
     "generate:resource": "nest g resource && ts-node scripts/modify-resource.ts",
-    "create:roles": "ts-node scripts/create-roles.ts",
-    "generate:keys": "node scripts/generate-keys.js"
+    "test:e2e:simple": "jest --maxWorkers=4 --verbose --no-cache --detectOpenHandles --config ./test/jest-e2e.json --coverage --coverageReporters=\"text-summary\" --testPathPattern=$FILE",
+    "test:e2e:all": "jest --coverage --maxWorkers=4 --verbose=true --no-cache --detectOpenHandles --config ./test/jest-e2e.json --coverageReporters=html"
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",

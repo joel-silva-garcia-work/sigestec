@@ -55,12 +55,12 @@ export class BaseControllerCRUD<
   })
   @ApiBody({ type: IdDto, description: 'ID del elemento a buscar.' })
   async findOneActive(@Body(new ValidationPipe({ transform: true })) dto: IdDto, securityParam?: any): Promise<ReturnDto> {
-    return this.service.findOneActive(dto);
+    return await this.service.findOneActive(dto);
   }
 
   @Get('todos-activos')
   async findActiveItems(securityParam?: any): Promise<ReturnDto> {
-    return this.service.findActiveItems();
+    return await this.service.findActiveItems();
   }
 
     // Método público para activar

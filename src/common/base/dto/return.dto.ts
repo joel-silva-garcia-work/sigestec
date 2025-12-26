@@ -1,10 +1,9 @@
-import { CodeEnum } from 'src/common/enum/code.enum';
-import { MultilanguageDto } from './multilanguage.dto';
+import { CodeEnum } from '../../../common/enum/code.enum';
 
-export class ReturnDto {
+export class ReturnDto<T = any> {
   isSuccess: boolean = true;
   returnCode: number = CodeEnum.OK;
-  data?: Object;
+  data?: T;
   errorCode?: any
   errorMessage?: string;
 }

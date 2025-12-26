@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseServiceCRUD } from 'src/common/base/class/base.service.crud.class';
+import { BaseServiceCRUD } from '../../common/base/class/base.service.crud.class';
 import { Aft } from './entities/aft.entity';
 import { CreateAftDto, UpdateAftDto } from './dto';
-import { IdDto } from 'src/common/base/dto/id.dto';
-import { Traza } from 'src/security/trazas/entities/traza.entity';
-import { CreateTrazaDto } from 'src/security/trazas/dto/create-traza.dto';
+import { IdDto } from '../../common/base/dto/id.dto';
+import { Traza } from '../../security/trazas/entities/traza.entity';
+import { CreateTrazaDto } from '../../security/trazas/dto/create-traza.dto';
 
 
 @Injectable()
@@ -24,22 +24,22 @@ UpdateAftDto> {
   }
 
   override async findAllItems() {
-    return super.findAllItems();
+    return await super.findAllItems();
   }
 
 
   override async findActiveItems() {
-    return super.findActiveItems();
+    return await super.findActiveItems();
   }
 
   override async findOne(id: IdDto) {
-    return super.findOne(id);
+    return await super.findOne(id);
   }
 
   async Add(createDto: CreateAftDto, traza: CreateTrazaDto) {
     const result = await super.create(createDto);
     if (result.isSuccess) {
-      this.trazaRepository.save(traza);
+      await this.trazaRepository.save(traza);
     }
     return result;
   }
@@ -47,7 +47,7 @@ UpdateAftDto> {
   async Edit(updateDto: UpdateAftDto, traza: CreateTrazaDto) {
     const result = await super.update(updateDto);
     if (result.isSuccess) {
-      this.trazaRepository.save(traza);
+      await this.trazaRepository.save(traza);
     }
     return result;
   }

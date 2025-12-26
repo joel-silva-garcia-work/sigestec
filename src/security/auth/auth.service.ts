@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   ForbiddenException,
   Injectable,
   Logger,
@@ -10,16 +9,13 @@ import * as argon from 'argon2';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../user/entities/user.entity';
-import { AuthDto } from './dto/auth.dto';
 import { TokenDto } from './dto/token.dto';
 import { LogOutDto } from './dto/logOut.dto';
 import { LoginDto } from './dto/login.dto';
 import { Rol } from '../rol/entities/rol.entity';
-import { CreateUserDto } from '../user/dto';
-import * as ldap from 'ldapjs';
-import { ReturnDto } from 'src/common/base/dto/return.dto';
-import { CodeEnum } from 'src/common/enum/code.enum';
-import { AUTH_MESSAGES } from 'src/common/resource/auth.messages';
+import { ReturnDto } from '../../common/base/dto/return.dto';
+import { CodeEnum } from '../../common/enum/code.enum';
+import { AUTH_MESSAGES } from '../../common/resource/auth.messages';
 
 @Injectable({})
 export class AuthService {

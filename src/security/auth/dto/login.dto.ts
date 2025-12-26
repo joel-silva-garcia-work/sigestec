@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsPhoneNumber, IsString, IsStrongPassword } from 'class-validator';
-import { DTO_MESSAGES } from 'src/common/resource/dto.messages';
+import { DTO_MESSAGES } from '../../../common/resource/dto.messages';
 
 export class LoginDto {
 

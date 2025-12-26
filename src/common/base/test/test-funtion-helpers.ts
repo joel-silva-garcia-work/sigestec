@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { CodeEnum } from 'src/common/enum/code.enum';
-import { LoginDto } from 'src/security/auth/dto/login.dto';
+import { CodeEnum } from './../../../common/enum/code.enum';
+import { LoginDto } from './../../../security/auth/dto/login.dto';
 
 const BaseURL = 'http://localhost:5005/v1';
 // Esta función realiza login usando axios, y devuelve el token o un objeto DTO en caso de error.

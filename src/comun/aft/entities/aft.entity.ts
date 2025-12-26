@@ -1,9 +1,9 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
-import { BasicInformationEntity } from 'src/common/base/entities';
-import { Departamentos } from 'src/comun/departamentos/entities/departamentos.entity';
-import { Equipos } from 'src/comun/equipos/entities/equipos.entity';
-import { User } from 'src/security/user/entities/user.entity';
-import { Solicitudes } from 'src/taller/solicitudes/entities/solicitudes.entity';
+import { BasicInformationEntity } from '../../../common/base/entities';
+import { Departamentos } from '../../../comun/departamentos/entities/departamentos.entity';
+import { Equipos } from '../../../comun/equipos/entities/equipos.entity';
+import { User } from '../../../security/user/entities/user.entity';
+import { Solicitudes } from '../../../taller/solicitudes/entities/solicitudes.entity';
 
 @Entity({ name: 'aft', schema: 'comun' })
 export class Aft extends BasicInformationEntity {

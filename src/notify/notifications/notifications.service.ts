@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { BaseServiceCRUD } from 'src/common/base/class/base.service.crud.class';
+import { BaseServiceCRUD } from '../../common/base/class/base.service.crud.class';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from './entities/notification.entity';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
-import { ReturnDto } from 'src/common/base/dto';
-import { CodeEnum } from 'src/common/enum/code.enum';
+import { ReturnDto } from '../../common/base/dto';
+import { CodeEnum } from '../../common/enum/code.enum';
 import { UpdateStateNotificationDto } from './dto/update-read-notification.dto';
 
 @Injectable()

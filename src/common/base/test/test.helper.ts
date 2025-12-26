@@ -4,6 +4,7 @@ import https from 'https'
 import { ReturnDto } from '../dto'
 import { CodeEnum } from '../../../common/enum/code.enum'
 import { LoginDto } from '../../../security/auth/dto/login.dto'
+import { IdDto } from '../dto/id.dto'
 
 const BASE_URL = 'http://localhost:5005/v1/'
 
@@ -12,11 +13,20 @@ loginDto.username = 'admin'
 loginDto.password = '123456'
 
 
-const agent = new http.Agent({ keepAlive: false })
 
 export enum ErrorType {
   HttpError = 'HTTP-ERROR',
   AxiosError = 'AXIOS-ERROR',
+}
+export class HttpError extends Error {
+  public status: number
+  public type: ErrorType
+  constructor() {
+    super('Error de la API')
+    this.status = 400
+    this.name = 'HttpError'
+    this.type = ErrorType.HttpError
+  }
 }
 export enum FailedTest {
   CREATE_FAILED = 'CREATE FAILED',
@@ -27,7 +37,7 @@ export enum FailedTest {
 }
 
 export enum InvalidStandardDTO {
-  // Fisrt standard field
+  // First standard field
   NULL_NAME = 'NULL_NAME',
   NO_NAME = 'NO_NAME',
   EMPTY_NAME = 'EMPTY_NAME',
@@ -35,6 +45,7 @@ export enum InvalidStandardDTO {
 //   Second standard field
   WRONG_DESCRIPTION_TYPE = 'WRONG_DESCRIPTION_TYPE',
 }
+
 
 export const validateTest = (
   testName: string,
@@ -47,21 +58,11 @@ export const validateTest = (
     expect(result.data).not.toBeNull()
   } 
 }
-export class HttpError extends Error {
-  public status: number
-  public type: ErrorType
-  constructor() {
-    super('Error de la API')
-    this.status = 400
-    this.name = 'HttpError'
-    this.type = ErrorType.HttpError
-  }
-}
 // Función para iniciar sesión y establecer la agencia
 export async function login(): Promise<any> {
   let token: string | undefined
   try {
-    const response_login = await axios.post(`${BASE_URL}auth/login`, {
+    const response_login = await axios.post(`${BASE_URL}security/auth/autenticarse`, {
       "username": loginDto.username,
       "password": loginDto.password,
     })
@@ -69,18 +70,58 @@ export async function login(): Promise<any> {
   } catch (error) {
     console.log('Error en la solicitud de login:', error)
   }
+  return token
 }
 // Función para obtener todos los items
-export const fetchData = async (url: string, token: string): Promise<any> => {
+export const fetchData = async (url: string): Promise<any> => {
+  // console.log(BASE_URL+url)
   try {
     const response: AxiosResponse<any[]> = await axios.get(
       `${BASE_URL}${url}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        httpAgent: agent,
-        httpsAgent: new https.Agent({ keepAlive: false }),
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+        // httpAgent: agent,
+       // httpAgent: new http.Agent({ keepAlive: false }),
+      //  httpsAgent: new https.Agent({ keepAlive: false }),
+      },
+    )
+    return response.data
+  } catch (error) {
+    // console.log(error)
+    const customError = new HttpError() // Mensaje original del error
+    // Manejo de errores
+    if (axios.isAxiosError(error)) {
+      // El error es específico de Axios
+      customError.type = ErrorType.AxiosError
+      customError.message = `Error de Axios:'${error.message}: ${error.code}` // Mensaje original del error
+    } else {
+      // Manejo de otros tipos de errores que no son de Axios
+      customError.type = ErrorType.HttpError
+      customError.status = error.response.status
+      customError.message = error.message // Mensaje original del error
+    }
+    return customError // Retornar la instancia del nuevo Error
+  }
+}
+
+// Función para obtener un item por ID
+export const fetchItemById = async (
+  url: string,
+  object: IdDto,
+  // token: string,
+): Promise<any> => {
+  try {
+    const response: AxiosResponse<any> = await axios.get(
+      `${BASE_URL}${url}`,
+      {
+        params: object,
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   // httpAgent: agent,
+      //   httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
@@ -102,20 +143,19 @@ export const fetchData = async (url: string, token: string): Promise<any> => {
 }
 
 // Función para obtener un item por ID
-export const fetchItemById = async (
+export const fetchActiveItems = async (
   url: string,
-  id: string,
-  token: string,
+  // token: string,
 ): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axios.get(
-      `${BASE_URL}${url}/${id}`,
+      `${BASE_URL}${url}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        httpAgent: agent,
-        httpsAgent: new https.Agent({ keepAlive: false }),
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   // httpAgent: agent,
+      //   httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
@@ -150,7 +190,7 @@ export const createData = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        httpAgent: agent,
+        // httpAgent: agent,
         httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
@@ -188,7 +228,7 @@ export const updateData = async (
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        httpAgent: agent,
+        // httpAgent: agent,
         httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
@@ -221,7 +261,7 @@ export const deleteData = async (
       headers: {
         Authorization: `Bearer ${token}`,
       },
-      httpAgent: agent,
+      // httpAgent: agent,
       httpsAgent: new https.Agent({ keepAlive: false }),
     })
     return result

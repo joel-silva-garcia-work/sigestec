@@ -1,10 +1,10 @@
 import { Controller, Patch, Post } from '@nestjs/common';
-import { BaseControllerCRUD } from 'src/common/base/class/base.controller.crud.class';
+import { BaseControllerCRUD } from '../../common/base/class/base.controller.crud.class';
 import { ApiTags, ApiOperation, ApiResponse, ApiBadRequestResponse, ApiBody } from '@nestjs/swagger';
 import { CreateOrdenesDto, UpdateOrdenesDto } from './dto';
 import { OrdenesService } from './ordenes.service';
-import { IdDto } from 'src/common/base/dto/id.dto';
-import { CreateTrazaDto } from 'src/security/trazas/dto/create-traza.dto';
+import { IdDto } from '../../common/base/dto/id.dto';
+import { CreateTrazaDto } from '../../security/trazas/dto/create-traza.dto';
 import { 
   Body,
   Get,
@@ -15,14 +15,13 @@ import {
   Param,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { JwtGuard } from 'src/security/auth/guard';
-import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
-import { ReturnDto } from 'src/common/base/dto';
+import { JwtGuard } from '../../security/auth/guard';
+import { RouteAccessGuard } from '../../common/guards/route-access.guard';
+import { ReturnDto } from '../../common/base/dto';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
-import { CloseOrdenDto } from './dto/close-orden.dto';
 
 @ApiTags('ordenes')
-@Controller('ordenes')
+@Controller('taller/ordenes')
 export class OrdenesController extends BaseControllerCRUD<
 CreateOrdenesDto,
 UpdateOrdenesDto,

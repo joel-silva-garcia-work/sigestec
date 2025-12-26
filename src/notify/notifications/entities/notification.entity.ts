@@ -1,7 +1,7 @@
 import { BasicEntity } from "../../../common/base/entities";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
-import { notifyEnum } from "src/common/enum/notify.enum";
-import { DestinationType } from "src/common/base/types/destination.type";
+import { notifyEnum } from "./../../../common/enum/notify.enum";
+import { DestinationType } from "./../../../common/base/types/destination.type";
 
 @Entity({ name: 'notifications', schema: 'notify' })
 export class Notification extends BasicEntity {

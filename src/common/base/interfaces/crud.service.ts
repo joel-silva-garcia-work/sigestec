@@ -5,8 +5,8 @@ import { IdDto } from "../dto/id.dto";
 
 export interface CrudService<TCreateDto, TUpdateDto> {
   findAllItems(): Promise<ReturnDto>;
-  findActiveItems(): Promise<ReturnDto>;
   findOne(dto: IdDto): Promise<ReturnDto>;
+  findActiveItems(): Promise<ReturnDto>;
   findOneActive(dto: IdDto): Promise<ReturnDto>;
   create(createDto: TCreateDto): Promise<ReturnDto>;
   update(updateDto: TUpdateDto): Promise<ReturnDto>;

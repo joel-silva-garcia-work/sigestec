@@ -3,13 +3,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Ordenes } from './entities/ordenes.entity';
 import { OrdenesService } from './ordenes.service';
 import { OrdenesController } from './ordenes.controller';
-import { Traza } from 'src/security/trazas/entities/traza.entity';
+import { Traza } from '../../security/trazas/entities/traza.entity';
 import { Solicitudes } from '../solicitudes/entities/solicitudes.entity';
 import { SolicitudesModule } from '../solicitudes/solicitudes.module';
-import { User } from 'src/security/user/entities/user.entity';
-import { UserModule } from 'src/security/user/user.module';
-import { Notification } from 'src/notify/notifications/entities/notification.entity';
-import { NotificationsModule } from 'src/notify/notifications/notifications.module';
+import { User } from '../../security/user/entities/user.entity';
+import { UserModule } from '../../security/user/user.module';
+import { Notification } from '../../notify/notifications/entities/notification.entity';
+import { NotificationsModule } from '../../notify/notifications/notifications.module';
 
 @Module({
   imports: [

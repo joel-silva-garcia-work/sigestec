@@ -1,22 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseServiceCRUD } from 'src/common/base/class/base.service.crud.class';
+import { BaseServiceCRUD } from '../../common/base/class/base.service.crud.class';
 import { Ordenes } from './entities/ordenes.entity';
 import { CreateOrdenesDto, UpdateOrdenesDto } from './dto';
-import { IdDto } from 'src/common/base/dto/id.dto';
-import { Traza } from 'src/security/trazas/entities/traza.entity';
-import { CreateTrazaDto } from 'src/security/trazas/dto/create-traza.dto';
+import { IdDto } from '../../common/base/dto/id.dto';
+import { Traza } from '../../security/trazas/entities/traza.entity';
+import { CreateTrazaDto } from '../../security/trazas/dto/create-traza.dto';
 import { Solicitudes } from '../solicitudes/entities/solicitudes.entity';
 import { EstadoEnum } from './enum/estado.enum';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
-import { ReturnDto } from 'src/common/base/dto';
-import { CloseOrdenDto } from './dto/close-orden.dto';
-import { CodeEnum } from 'src/common/enum/code.enum';
-import { CreateNotificationDto } from 'src/notify/notifications/dto/create-notification.dto';
-import { notifyEnum } from 'src/common/enum/notify.enum';
-import { User } from 'src/security/user/entities/user.entity';
-import { Notification } from 'src/notify/notifications/entities/notification.entity';
+import { ReturnDto } from '../../common/base/dto';
+import { CodeEnum } from '../../common/enum/code.enum';
+import { CreateNotificationDto } from '../../notify/notifications/dto/create-notification.dto';
+import { notifyEnum } from '../../common/enum/notify.enum';
+import { User } from '../../security/user/entities/user.entity';
+import { Notification } from '../../notify/notifications/entities/notification.entity';
 
 
 @Injectable()

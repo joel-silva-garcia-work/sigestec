@@ -179,9 +179,8 @@ async function modifyResource() {
     const servicePath = path.join(resourceDir, `${resourceName}.service.ts`);
     const controllerPath = path.join(resourceDir, `${resourceName}.controller.ts`);
 
-
     const entityContent = `import { Entity, Column } from 'typeorm';
-import { BasicInformationEntity } from 'src/common/base/entities';
+import { BasicInformationEntity } from './../../../common/base/entities';
 
 @Entity({ name: '${tableName}', schema: '${schemaName}' })
 export class ${className} extends BasicInformationEntity {
@@ -229,8 +228,8 @@ ${fieldsContent}
 
     const dtoContent = `import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsDate, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { BaseExtendedDto } from 'src/common/base/dto/base.dto';
-import { DTO_MESSAGES } from 'src/common/resource/dto.messages';
+import { BaseExtendedDto } from './../../../common/base/dto/base.dto';
+import { DTO_MESSAGES } from './../../../common/resource/dto.messages';
 
 export class Create${className}Dto extends BaseExtendedDto {
 ${dtoFieldsContent}
@@ -263,7 +262,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ${className} } from './entities/${resourceName}.entity';
 import { ${className}Service } from './${resourceName}.service';
 import { ${className}Controller } from './${resourceName}.controller';
-import { Traza } from 'src/security/trazas/entities/traza.entity';
+import { Traza } from '../../security/trazas/entities/traza.entity';
 
 @Module({
   imports: [
@@ -282,12 +281,12 @@ export class ${className}Module {}
 const serviceContent = `import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { BaseServiceCRUD } from 'src/common/base/class/base.service.crud.class';
+import { BaseServiceCRUD } from './../../../common/base/class/base.service.crud.class';
 import { ${className} } from './entities/${resourceName}.entity';
 import { Create${className}Dto, Update${className}Dto } from './dto';
-import { IdDto } from 'src/common/base/dto/id.dto';
-import { Traza } from 'src/security/trazas/entities/traza.entity';
-import { CreateTrazaDto } from 'src/security/trazas/dto/create-traza.dto';
+import { IdDto } from './../../../common/base/dto/id.dto';
+import { Traza } from '../../security/trazas/entities/traza.entity';
+import { CreateTrazaDto } from '../../security/trazas/dto/create-traza.dto';
 
 
 @Injectable()
@@ -305,22 +304,22 @@ Update${className}Dto> {
   }
 
   override async findAllItems() {
-    return super.findAllItems();
+    return await super.findAllItems();
   }
 
 
   override async findActiveItems() {
-    return super.findActiveItems();
+    return await super.findActiveItems();
   }
 
   override async findOne(id: IdDto) {
-    return super.findOne(id);
+    return await super.findOne(id);
   }
 
   async Add(createDto: Create${className}Dto, traza: CreateTrazaDto) {
     const result = await super.create(createDto);
     if (result.isSuccess) {
-      this.trazaRepository.save(traza);
+      await this.trazaRepository.save(traza);
     }
     return result;
   }
@@ -355,12 +354,12 @@ Update${className}Dto> {
 
     // Generar el controller
 const controllerContent = `import { Controller } from '@nestjs/common';
-import { BaseControllerCRUD } from 'src/common/base/class/base.controller.crud.class';
+import { BaseControllerCRUD } from './../../../common/base/class/base.controller.crud.class';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Create${className}Dto, Update${className}Dto } from './dto';
 import { ${className}Service } from './${resourceName}.service';
-import { IdDto } from 'src/common/base/dto/id.dto';
-import { CreateTrazaDto } from 'src/security/trazas/dto/create-traza.dto';
+import { IdDto } from './../../../common/base/dto/id.dto';
+import { CreateTrazaDto } from './../../../security/trazas/dto/create-traza.dto';
 import { 
   Body,
   Get,
@@ -380,12 +379,12 @@ import {
   Req,
   Param,
 } from '@nestjs/common';
-import { JwtGuard } from 'src/security/auth/guard';
-import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
-import { ReturnDto } from 'src/common/base/dto';
+import { JwtGuard } from './../../../security/auth/guard';
+import { RouteAccessGuard } from './../../../common/guards/route-access.guard';
+import { ReturnDto } from './../../../common/base/dto';
 
 @ApiTags('${resourceName}')
-@Controller('${resourceName}')
+@Controller('${schemaName}/${resourceName}')
 export class ${className}Controller extends BaseControllerCRUD<
 Create${className}Dto,
 Update${className}Dto,
@@ -526,7 +525,7 @@ ${className}Service
       let ormConfigContent = fs.readFileSync(ormConfigPath, 'utf8');
 
       // // Agregar import de la nueva entidad
-      const importStatement = `import { ${className} } from './src/${schemaName}/${resourceName}/entities/${resourceName}.entity';\n`;
+      const importStatement = `import { ${className} } from '../../../${schemaName}/${resourceName}/entities/${resourceName}.entity';\n`;
       
       // // Encontrar la última importación
       // palabra //import

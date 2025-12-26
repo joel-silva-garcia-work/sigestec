@@ -1,7 +1,6 @@
-   // src/mail/mail.service.ts
    import { Injectable } from '@nestjs/common';
    import { createTransport } from 'nodemailer';
-   import * as dotenv from 'dotenv';
+  // import * as dotenv from 'dotenv';
 
    @Injectable()
    export class MailService {

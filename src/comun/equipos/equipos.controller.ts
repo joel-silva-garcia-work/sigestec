@@ -20,7 +20,7 @@ import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { ReturnDto } from 'src/common/base/dto';
 
 @ApiTags('equipos')
-@Controller('equipos')
+@Controller('comun/equipos')
 export class EquiposController extends BaseControllerCRUD<
 CreateEquiposDto,
 UpdateEquiposDto,

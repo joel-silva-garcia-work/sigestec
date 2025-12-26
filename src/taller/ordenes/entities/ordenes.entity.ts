@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne, OneToOne } from 'typeorm';
-import { BasicInformationEntity } from 'src/common/base/entities';
-import { User } from 'src/security/user/entities/user.entity';
+import { BasicInformationEntity } from '../../../common/base/entities';
+import { User } from '../../../security/user/entities/user.entity';
 import { EstadoEnum } from '../enum/estado.enum';
-import { Solicitudes } from 'src/taller/solicitudes/entities/solicitudes.entity';
+import { Solicitudes } from '../../solicitudes/entities/solicitudes.entity';
 
 @Entity({ name: 'ordenes', schema: 'taller' })
 export class Ordenes extends BasicInformationEntity {
