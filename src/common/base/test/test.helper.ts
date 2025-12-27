@@ -12,8 +12,6 @@ const loginDto = new LoginDto()
 loginDto.username = 'admin'
 loginDto.password = '123456'
 
-
-
 export enum ErrorType {
   HttpError = 'HTTP-ERROR',
   AxiosError = 'AXIOS-ERROR',
@@ -45,6 +43,9 @@ export enum InvalidStandardDTO {
 //   Second standard field
   WRONG_DESCRIPTION_TYPE = 'WRONG_DESCRIPTION_TYPE',
 }
+
+
+
 
 
 export const validateTest = (
@@ -82,9 +83,8 @@ export const fetchData = async (url: string): Promise<any> => {
         // headers: {
         //   Authorization: `Bearer ${token}`,
         // },
-        // httpAgent: agent,
-       // httpAgent: new http.Agent({ keepAlive: false }),
-      //  httpsAgent: new https.Agent({ keepAlive: false }),
+        // httpAgent: new http.Agent({ keepAlive: false }),
+        // httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
@@ -120,8 +120,8 @@ export const fetchItemById = async (
       //   headers: {
       //     Authorization: `Bearer ${token}`,
       //   },
-      //   // httpAgent: agent,
-      //   httpsAgent: new https.Agent({ keepAlive: false }),
+        // httpAgent: new http.Agent({ keepAlive: false }),
+        // httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
@@ -154,8 +154,8 @@ export const fetchActiveItems = async (
       //   headers: {
       //     Authorization: `Bearer ${token}`,
       //   },
-      //   // httpAgent: agent,
-      //   httpsAgent: new https.Agent({ keepAlive: false }),
+        // httpAgent: new http.Agent({ keepAlive: false }),
+        // httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
@@ -180,23 +180,23 @@ export const fetchActiveItems = async (
 export const createData = async (
   url: string,
   newItem: {},
-  token: string,
+  token?: string,
 ): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axios.post(
       `${BASE_URL}${url}`,
       newItem,
       {
-        headers: {
+        headers: token ? {
           Authorization: `Bearer ${token}`,
-        },
-        // httpAgent: agent,
-        httpsAgent: new https.Agent({ keepAlive: false }),
+        } : {},
+        // httpAgent: new http.Agent({ keepAlive: false }),
+        // httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
   } catch (error) {
-    const customError = new HttpError() // Mensaje original del error
+    const customError = new HttpError() // Mensaje  yoriginal del error
 
     // Manejo de errores
     if (axios.isAxiosError(error)) {
@@ -209,6 +209,7 @@ export const createData = async (
       customError.status = error.response.status
       customError.message = error.message // Mensaje original del error
     }
+
     return customError // Retornar la instancia del nuevo Error
   }
 }
@@ -216,20 +217,19 @@ export const createData = async (
 // Función para actualizar un item existente
 export const updateData = async (
   url: string,
-  id: string,
   updatedItem: {},
-  token: string,
+  token?: string,
 ): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axios.patch(
-      `${BASE_URL}${url}/${id}`,
+      `${BASE_URL}${url}`,
       updatedItem,
       {
-        headers: {
+        headers: token ? {
           Authorization: `Bearer ${token}`,
-        },
-        // httpAgent: agent,
-        httpsAgent: new https.Agent({ keepAlive: false }),
+        } : {},
+        // httpAgent: new http.Agent({ keepAlive: false }),
+        // httpsAgent: new https.Agent({ keepAlive: false }),
       },
     )
     return response.data
@@ -250,21 +250,25 @@ export const updateData = async (
   }
 }
 
-// Función para eliminar un item
-export const deleteData = async (
+// Función para actualizar un item state
+export const updateState = async (
   url: string,
-  id: string,
-  token: string,
+  DTO: IdDto,
+  token?: string,
 ): Promise<any> => {
   try {
-    const result = await axios.delete(`${BASE_URL}${url}/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response: AxiosResponse<any> = await axios.put(
+      `${BASE_URL}${url}`,
+      DTO,
+      {
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        // },
+        // httpAgent: new http.Agent({ keepAlive: false }),
+        // httpsAgent: new https.Agent({ keepAlive: false }),
       },
-      // httpAgent: agent,
-      httpsAgent: new https.Agent({ keepAlive: false }),
-    })
-    return result
+    )
+    return response.data
   } catch (error) {
     const customError = new HttpError() // Mensaje original del error
 
@@ -281,3 +285,5 @@ export const deleteData = async (
     return customError // Retornar la instancia del nuevo Error
   }
 }
+
+

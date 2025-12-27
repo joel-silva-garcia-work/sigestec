@@ -9,8 +9,6 @@ Resultados esperados en cada fichero ejecutado
 GENERAL
 TEST E2E
 // Comun 
-yarn test:e2e:simple --FILE= ./src/comun/equipos/test/test.e2e-spec.ts
-yarn test:e2e:simple --FILE= ./src/comun/departamentos/test/test.e2e-spec.ts
-yarn test:e2e:simple --FILE= ./src/comun/aft/test/test.e2e-spec.ts
+yarn test:all:e2e
 
 //=======================================================================================

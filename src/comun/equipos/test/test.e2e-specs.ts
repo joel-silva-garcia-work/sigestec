@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker'
-import { fetchData,fetchItemById,createData, deleteData,   HttpError, InvalidStandardDTO, login, updateData, validateTest } from '../../../common/base/test/test.helper'
+import { fetchData,fetchItemById,createData,   HttpError, InvalidStandardDTO, login, updateData, validateTest } from '../../../common/base/test/test.helper'
 import { RulesDto } from '../../../common/base/dto/rules.dto';
 
 

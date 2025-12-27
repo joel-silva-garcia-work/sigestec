@@ -26,8 +26,7 @@
     "generate": "node generate-resource.js",
     "generate:schema": "ts-node scripts/generate-postgres-schema.ts",
     "generate:resource": "nest g resource && ts-node scripts/modify-resource.ts",
-    "test:e2e:simple": "jest --maxWorkers=4 --verbose --no-cache --detectOpenHandles --config ./test/jest-e2e.json --coverage --coverageReporters=\"text-summary\" --testPathPattern=$FILE",
-    "test:e2e:all": "jest --coverage --maxWorkers=4 --verbose=true --no-cache --detectOpenHandles --config ./test/jest-e2e.json --coverageReporters=html"
+    "test:all:e2e": "jest --runInBand --verbose --no-cache --config ./test/jest-e2e.json --coverage --coverageReporters=\"text-summary\""
   },
   "dependencies": {
     "@nestjs/axios": "^4.0.1",

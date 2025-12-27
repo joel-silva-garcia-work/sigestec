@@ -6,7 +6,7 @@
   "coverageReporters": ["html", "text", "lcov"],
   "coverageThreshold": {
     "global": {
-      "lines": 60
+      "lines": 70
     }
   },
   "testEnvironment": "node",
