@@ -35,24 +35,33 @@ export class ClassValidator {
     scenarios: ValidateScenarioDto[],
   ): Promise<boolean> {
     const query = repo.createQueryBuilder(repo.metadata.tableName);
-
     let valid = true;
      scenarios.forEach((scenario) => {
-      if (scenario.value instanceof Object) {
-        query.andWhere(
-          `${scenario.table}.${scenario.field}->>'es' = '${scenario.value['es']}'`,
-        );
-        query.orWhere(
-          `${scenario.table}.${scenario.field}->>'en' = '${scenario.value['en']}'`,
-        );
-      } else if (typeof scenario.value === 'string') {
-        query.andWhere(
+      // if (scenario.value instanceof Object) {
+      //   query.andWhere(
+      //     `${scenario.table}.${scenario.field}->>'es' = '${scenario.value['es']}'`,
+      //   );
+      //   query.orWhere(
+      //     `${scenario.table}.${scenario.field}->>'en' = '${scenario.value['en']}'`,
+      //   );
+      // } else 
+      if (typeof scenario.value === 'string') 
+        {
+        if(scenario.field == 'id')
+        {
+          query.andWhere(
+            `${scenario.table}.${scenario.field} != '${scenario.value}'`,
+          );
+        }
+        else
+        {
+          query.andWhere(
           `${scenario.table}.${scenario.field} = '${scenario.value}'`,
-        );
+          );
+        }
       }
     });
     const result = await query.getOne();
-    
     if (result) {
       if(result.id != id)
       { 

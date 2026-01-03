@@ -25,6 +25,7 @@ export class BaseServiceCRUD<
     this.dto = new CrudDto();
     this.dto.repo = repo;
     this.returnDto = new ReturnDto();
+    this.returnDto.data = null;
   }
 
   async findAllItems(): Promise<ReturnDto> {
@@ -35,12 +36,17 @@ export class BaseServiceCRUD<
   async findActiveItems(): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
     returnDto.data = await this.dto.repo.find({
-      where: { isActive: true },
+      where: { 
+        isActive: true,
+        isDeleted: false,
+       },
+
     });
     return returnDto;
   }
 
   async create(createDto: createDto): Promise<ReturnDto> {
+    
     if (createDto.rules) {
       this.valid = await this._validate(createDto);
     } else {
@@ -54,12 +60,15 @@ export class BaseServiceCRUD<
         this.returnDto.errorCode = error.code
         this.returnDto.returnCode = CodeEnum.BAD_REQUEST;
         this.returnDto.errorMessage = error.message ;
+        this.returnDto.data = null;
       }
     } else {
       this.returnDto.isSuccess = false;
       this.returnDto.errorCode = CodeEnum.BAD_REQUEST
       this.returnDto.returnCode = CodeEnum.BAD_REQUEST;
       this.returnDto.errorMessage =  ResourceEnum.ALREADY_EXST ;
+      this.returnDto.data = null;
+
     }
     return this.returnDto;
   }
@@ -80,6 +89,7 @@ export class BaseServiceCRUD<
         if (!object) {
           this.returnDto.isSuccess = false;
           this.returnDto.returnCode = CodeEnum.BAD_REQUEST;
+          this.returnDto.data = null;
           // traducir
         } else {
           this.returnDto.data = await this.dto.repo.save(updateDto);
@@ -88,11 +98,14 @@ export class BaseServiceCRUD<
         this.returnDto.isSuccess = false;
         this.returnDto.errorMessage = error.message ;
         this.returnDto.returnCode = error.code;
+        this.returnDto.data = null;
+
       }
     } else {
       this.returnDto.isSuccess = false;
       this.returnDto.returnCode = CodeEnum.BAD_REQUEST;
       this.returnDto.errorMessage = ResourceEnum.ALREADY_EXST ;
+      this.returnDto.data = null;
     }
     return this.returnDto;
   }
@@ -111,7 +124,9 @@ export class BaseServiceCRUD<
       this.returnDto.errorMessage =  `the Item with id ${this.dto.id} do not exist`
     } 
     else {
-      this.returnDto.data = await this.dto.repo.softDelete(this.dto.id);
+      item.isDeleted = false;
+      item.deletedAt = new Date();
+      this.returnDto.data = await this.dto.repo.save(item);
     }
     return this.returnDto;
   }
@@ -136,7 +151,8 @@ export class BaseServiceCRUD<
     const item = await this.dto.repo.findOne({
       where: {
         id: dto.id,
-        isActive: true
+        isActive: true,
+        isDeleted: false,
       },
     });
     if (!item) {
@@ -163,9 +179,10 @@ export class BaseServiceCRUD<
         scenarios.push(scenario);
       });
       const validated: ClassValidator = new ClassValidator();
-      if (rules.method == MethodEnum.CREATE) {
+      if (rules.method === MethodEnum.CREATE) {
         this.valid = await validated.validateCreate(this.dto.repo, scenarios);
-      } else if (rules.method == MethodEnum.UPDATE) {
+      } 
+      else if (rules.method === MethodEnum.UPDATE) {
         this.valid = await validated.validateUpdate(
           dto.id,
           this.dto.repo,

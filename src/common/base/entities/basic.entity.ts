@@ -18,12 +18,15 @@ export abstract class BasicEntity {
 
   //NOTE: '_' prefix is for hidden control fields
   @DeleteDateColumn({
-    name: '_deleted_at',
+    name: 'deleted_at',
     type: 'timestamp',
     nullable: true,
     default: null,
   })
   deletedAt?: Date 
+
+  @Column({ default: false })
+  isDeleted: boolean;
   
   @Column({ default: true })
   isActive: boolean;

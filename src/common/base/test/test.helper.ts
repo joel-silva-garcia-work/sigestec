@@ -9,8 +9,8 @@ import { IdDto } from '../dto/id.dto'
 const BASE_URL = 'http://localhost:5005/v1/'
 
 const loginDto = new LoginDto()
-loginDto.username = 'admin'
-loginDto.password = '123456'
+loginDto.username = 'UserTest'
+loginDto.password = '1Qaz@wsx'
 
 export enum ErrorType {
   HttpError = 'HTTP-ERROR',
@@ -74,15 +74,14 @@ export async function login(): Promise<any> {
   return token
 }
 // Función para obtener todos los items
-export const fetchData = async (url: string): Promise<any> => {
-  // console.log(BASE_URL+url)
+export const fetchData = async (url: string,token?:string): Promise<any> => {
   try {
     const response: AxiosResponse<any[]> = await axios.get(
       `${BASE_URL}${url}`,
       {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: token ? {
+          Authorization: `Bearer ${token}`,
+        } : {},
         // httpAgent: new http.Agent({ keepAlive: false }),
         // httpsAgent: new https.Agent({ keepAlive: false }),
       },
@@ -110,16 +109,16 @@ export const fetchData = async (url: string): Promise<any> => {
 export const fetchItemById = async (
   url: string,
   object: IdDto,
-  // token: string,
+  token?: string,
 ): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axios.get(
       `${BASE_URL}${url}`,
       {
         params: object,
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
+        headers: token ? {
+          Authorization: `Bearer ${token}`,
+        } : {},
         // httpAgent: new http.Agent({ keepAlive: false }),
         // httpsAgent: new https.Agent({ keepAlive: false }),
       },
@@ -145,15 +144,15 @@ export const fetchItemById = async (
 // Función para obtener un item por ID
 export const fetchActiveItems = async (
   url: string,
-  // token: string,
+  token?: string,
 ): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axios.get(
       `${BASE_URL}${url}`,
       {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         // httpAgent: new http.Agent({ keepAlive: false }),
         // httpsAgent: new https.Agent({ keepAlive: false }),
       },
@@ -261,9 +260,9 @@ export const updateState = async (
       `${BASE_URL}${url}`,
       DTO,
       {
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        // },
+        headers: token ? {
+          Authorization: `Bearer ${token}`,
+        } : {},
         // httpAgent: new http.Agent({ keepAlive: false }),
         // httpsAgent: new https.Agent({ keepAlive: false }),
       },
