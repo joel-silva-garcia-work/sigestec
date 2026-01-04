@@ -35,7 +35,7 @@ AftService
       return super.findItems();
     }
   
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure', 'ver-todos-activos-public'])
     override async findActiveItems(
     // @GetUserAdmin() user: User
@@ -43,7 +43,7 @@ AftService
       return super.findActiveItems();
     }
 
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-secure', 'ver-uno-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -60,7 +60,7 @@ AftService
   }
   
   
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-activo-secure', 'ver-uno-activo-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -76,7 +76,7 @@ AftService
     return this.Service.findOneActive(dto);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en aft' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
@@ -96,7 +96,7 @@ AftService
     return await this.Service.Add(createDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en aft' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
@@ -116,7 +116,7 @@ AftService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de aft' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})

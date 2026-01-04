@@ -10,7 +10,7 @@ export class CreateAftDto extends BaseExtendedDto {
 
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
   @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
-  departamentos: string;
+  departamento: string;
 
   @IsUUID()
   @IsString()
