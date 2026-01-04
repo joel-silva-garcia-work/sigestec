@@ -21,7 +21,7 @@ import { ReturnDto } from 'src/common/base/dto';
 import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
 
 @ApiTags('solicitudes')
-@Controller('solicitudes')
+@Controller('taller/solicitudes')
 export class SolicitudesController extends BaseControllerCRUD<
 CreateSolicitudesDto,
 UpdateSolicitudesDto,
@@ -36,7 +36,7 @@ SolicitudesService
       return super.findItems();
     }
   
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure', 'ver-todos-activos-public'])
     override async findActiveItems(
     // @GetUserAdmin() user: User
@@ -44,7 +44,7 @@ SolicitudesService
       return super.findActiveItems();
     }
 
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-secure', 'ver-uno-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -61,7 +61,7 @@ SolicitudesService
   }
   
   
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-activo-secure', 'ver-uno-activo-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
