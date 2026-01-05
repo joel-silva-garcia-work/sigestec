@@ -4,6 +4,7 @@ export enum EstadoEnum {
   EN_EJECUCION = 'en_ejecucion',
   REALIZADA = 'realizada',
   RECHAZADA = 'rechazada',
+  CANCELAR = 'cancelar',
   NO_POSIBLE = 'no_posible',
   EVALUADA = 'evaluada'
 }

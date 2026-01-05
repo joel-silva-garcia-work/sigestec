@@ -12,6 +12,7 @@ import { ProfileUserDto } from './dto/profile-user.dto';
 import { ReturnDto } from 'src/common/base/dto';
 import { CodeEnum } from 'src/common/enum/code.enum';
 import * as argon from 'argon2';
+import { ResetPaswdDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class UserService extends BaseServiceCRUD<
@@ -86,6 +87,31 @@ UpdateUserDto> {
       returnDto.errorMessage = "La confirmacion no es igual al password nuevo"
       return returnDto
     }
+
+    const user = await this.repository.findOneBy({
+      id: dto.id,
+    });
+    if (!user)
+      {
+        const returnDto = new ReturnDto
+        returnDto.errorCode = 400
+        returnDto.returnCode = CodeEnum.BAD_REQUEST
+        returnDto.errorMessage = "El usuario no existe"
+        return returnDto
+      }
+    user.hash = await argon.hash(dto.password);
+
+    await this.repository.save(user)
+
+    const result = await super.active(dto);
+    if (result.isSuccess) {
+      // traza.traza = result.data ? (result.data as User).toRecord() : result.data;
+      this.trazaRepository.save(traza);
+    }
+    return result;
+  }
+
+  async ResetPswd(dto: ResetPaswdDto, traza: CreateTrazaDto) {
 
     const user = await this.repository.findOneBy({
       id: dto.id,

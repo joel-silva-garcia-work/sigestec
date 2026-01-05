@@ -22,6 +22,7 @@ import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
 import { User } from './entities/user.entity';
 import { ProfileUserDto } from './dto/profile-user.dto';
+import { ResetPaswdDto } from './dto/reset-password.dto';
 
 @ApiTags('user')
 @Controller('usuarios')
@@ -160,5 +161,25 @@ UserService
   
       // Llamar al método create de la clase base, pasando el request  
       return await this.Service.Profile(dto, traza);
+    }
+    // @UseGuards(JwtGuard)
+    @Put('reset-password')
+    async ResetPswd(@Body(new ValidationPipe({ transform: true })) dto: ResetPaswdDto,
+    @Req() request: Request,
+    @GetUser() user: User
+    ) {
+  
+      // Obtener la IP del cliente
+      const clientIp = request.socket.remoteAddress; // Usar socket.remoteAddress en lugar de connection.remoteAddress
+      const ipv4 = clientIp?.replace('::ffff:', ''); // Extraer la parte IPv4 si está en formato IPv6
+      // Obtener la URL que se ejecutó
+      const executedUrl = request.originalUrl;
+      const traza = new CreateTrazaDto();
+      traza.ip = ipv4;
+      traza.url = executedUrl;
+      traza.traza = dto; // Asignar la traza sin la propiedad 'rules'
+  
+      // Llamar al método create de la clase base, pasando el request  
+      return await this.Service.ResetPswd(dto, traza);
     }
 }

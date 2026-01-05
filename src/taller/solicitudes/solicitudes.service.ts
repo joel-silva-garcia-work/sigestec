@@ -188,6 +188,37 @@ UpdateSolicitudesDto> {
     };
   }
 
+  async CancelRequest(dto: IdDto, traza: CreateTrazaDto) {
+    const solicitud = await this.repository.findOne({
+      where: {
+        id: dto.id
+      }
+    });
+    if (!solicitud) {
+      return {
+        isSuccess: false,
+        data: null,
+        errorMessage: 'Solicitud no encontrada'
+      };
+    }
+    if(solicitud.estado != EstadoEnum.SOLICITADA)
+    {
+      const returnDto = new ReturnDto
+      returnDto.isSuccess = false
+      returnDto.errorMessage ="La solicitud no esta en estado solicitada"
+      returnDto.errorCode = CodeEnum.BAD_REQUEST
+      return returnDto
+    }
+    solicitud.estado = EstadoEnum.CANCELAR;
+    await this.repository.save(solicitud);
+    this.trazaRepository.save(traza);
+    return {
+      isSuccess: true,
+      data: solicitud,
+      message: 'Solicitud cancelada exitosamente'
+    };
+  }
+
   async GetNoAssignedRequests() {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({

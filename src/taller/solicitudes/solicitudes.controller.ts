@@ -97,7 +97,7 @@ SolicitudesService
     return await this.Service.Add(createDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en solicitudes' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
@@ -117,7 +117,7 @@ SolicitudesService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de solicitudes' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
@@ -135,7 +135,7 @@ SolicitudesService
     return await this.Service.State(dto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put('valorar')
   @ApiOperation({ summary: 'Valorar una solicitud por el cliente' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object}  '})
@@ -152,7 +152,7 @@ SolicitudesService
     traza.traza = dto;
     return await this.Service.Evaluate(dto, traza);
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes')
   @ApiOperation({ summary: 'Obtener las solicitudes de un usuario' })
   @ApiResponse({ status: 200, description: 'Solicitudes obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -162,6 +162,23 @@ SolicitudesService
   ) {
     return await this.Service.GetRequests(dto);
   }
+    // @UseGuards(JwtGuard)
+    @Put('cancelar-solicitud')
+    @ApiOperation({ summary: 'Cancelar una solicitud' })
+    @ApiResponse({ status: 200, description: 'Solicitud cancelada exitosamente,returnDto.data={object}  '})
+    @ApiResponse({ status: 400, description: 'Solicitud no encontrada' })
+    async CancelRequest(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
+    @Req() request: Request
+    ) {
+      const clientIp = request.socket.remoteAddress;
+      const ipv4 = clientIp?.replace('::ffff:', '');
+      const executedUrl = request.originalUrl;
+      const traza = new CreateTrazaDto();
+      traza.ip = ipv4;
+      traza.url = executedUrl;
+      traza.traza = dto;
+      return await this.Service.CancelRequest(dto, traza);
+    }
   // @UseGuards(JwtGuard)
   @Put('rechazar-solicitud')
   @ApiOperation({ summary: 'Rechazar una solicitud' })
@@ -179,7 +196,7 @@ SolicitudesService
     traza.traza = dto;
     return await this.Service.RejectRequest(dto, traza);
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-no-asignadas')
   @ApiOperation({ summary: 'Obtener las solicitudes no asignadas' })
   @ApiResponse({ status: 200, description: 'Solicitudes no asignadas obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -187,7 +204,7 @@ SolicitudesService
   async GetNoAssignedRequests(@Req() request: Request) {
     return await this.Service.GetNoAssignedRequests();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-asignadas')
   @ApiOperation({ summary: 'Obtener las solicitudes asignadas' })
   @ApiResponse({ status: 200, description: 'Solicitudes asignadas obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -195,7 +212,7 @@ SolicitudesService
   async GetAssignedRequests(@Req() request: Request) {
     return await this.Service.GetAssignedRequests();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-en-ejecucion')
   @ApiOperation({ summary: 'Obtener las solicitudes en ejecución' })
   @ApiResponse({ status: 200, description: 'Solicitudes en ejecución obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -203,7 +220,7 @@ SolicitudesService
   async GetInExecutionRequests(@Req() request: Request) {
     return await this.Service.GetInExecutionRequests();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-evaluadas')
   @ApiOperation({ summary: 'Obtener las solicitudes evaluadas' })
   @ApiResponse({ status: 200, description: 'Solicitudes evaluadas obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -211,7 +228,7 @@ SolicitudesService
   async GetEvaluatedRequests(@Req() request: Request) {
     return await this.Service.GetEvaluatedRequests();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-rechazadas')
   @ApiOperation({ summary: 'Obtener las solicitudes rechazadas' })
   @ApiResponse({ status: 200, description: 'Solicitudes rechazadas obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -219,7 +236,7 @@ SolicitudesService
   async GetRejectedRequests(@Req() request: Request) {
     return await this.Service.GetRejectedRequests();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-no-posibles')
   @ApiOperation({ summary: 'Obtener las solicitudes no posibles' })
   @ApiResponse({ status: 200, description: 'Solicitudes no posibles obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -227,7 +244,7 @@ SolicitudesService
   async GetNoPossibleRequests(@Req() request: Request) {
     return await this.Service.GetNoPossibleRequests();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-realizadas')
   @ApiOperation({ summary: 'Obtener las solicitudes realizadas' })
   @ApiResponse({ status: 200, description: 'Solicitudes realizadas obtenidas exitosamente,returnDto.data={array of objects}  '})

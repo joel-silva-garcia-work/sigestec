@@ -36,7 +36,7 @@ OrdenesService
       return super.findItems();
     }
   
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure', 'ver-todos-activos-public'])
     override async findActiveItems(
     // @GetUserAdmin() user: User
@@ -44,7 +44,7 @@ OrdenesService
       return super.findActiveItems();
     }
 
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-secure', 'ver-uno-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -61,7 +61,7 @@ OrdenesService
   }
   
   
-  @UseGuards(RouteAccessGuard)
+  // @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-activo-secure', 'ver-uno-activo-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -77,7 +77,7 @@ OrdenesService
     return this.Service.findOneActive(dto);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en ordenes' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
@@ -97,7 +97,7 @@ OrdenesService
     return await this.Service.Add(createDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en ordenes' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
@@ -117,7 +117,7 @@ OrdenesService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de ordenes' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
@@ -135,7 +135,7 @@ OrdenesService
     return await this.Service.State(dto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Patch('cambiar-estado-ordenes-y-solicitudes')
   @ApiOperation({ summary: 'Actualizar un item existente en ordenes' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
@@ -154,7 +154,7 @@ OrdenesService
     return await this.Service.ChangeOrderAndRequestState(updateDto, traza);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-ordenes-tecnico')
   @ApiOperation({ summary: 'Obtener las solicitudes de un usuario' })
   @ApiResponse({ status: 200, description: 'Solicitudes obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -165,7 +165,7 @@ OrdenesService
     return await this.Service.GetOrdersByTechnician(dto);
   }
 
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-ordenes-asignadas')
   @ApiOperation({ summary: 'Obtener las ordenes asignadas' })
   @ApiResponse({ status: 200, description: 'Ordenes asignadas obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -173,7 +173,7 @@ OrdenesService
   async GetAssignedOrders(@Req() request: Request) {
     return await this.Service.GetAssignedOrders();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-ordenes-en-ejecucion')
   @ApiOperation({ summary: 'Obtener las ordenes en ejecución' })
   @ApiResponse({ status: 200, description: 'Ordenes en ejecución obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -181,7 +181,7 @@ OrdenesService
   async GetInExecutionOrders(@Req() request: Request) {
     return await this.Service.GetInExecutionOrders();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-ordenes-cerradas')
   @ApiOperation({ summary: 'Obtener las ordenes cerradas' })
   @ApiResponse({ status: 200, description: 'Ordenes cerradas obtenidas exitosamente,returnDto.data={array of objects}  '})
@@ -189,7 +189,7 @@ OrdenesService
   async GetSolvedOrders(@Req() request: Request) {
     return await this.Service.GetSolvedOrders();
   }
-  @UseGuards(JwtGuard)
+  // @UseGuards(JwtGuard)
   @Get('obtener-ordenes-no-solucionadas')
   @ApiOperation({ summary: 'Obtener las ordenes no solucionadas' })
   @ApiResponse({ status: 200, description: 'Ordenes no solucionadas obtenidas exitosamente,returnDto.data={array of objects}  '})
