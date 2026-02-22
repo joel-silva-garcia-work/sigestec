@@ -1,0 +1,286 @@
+{
+  "_comment": "Ejemplos de body/query para todos los endpoints. Herencia: IdDto (id); BaseExtendedDto (id?, name, description?, isActive?, rules?); PartialType = todos los campos opcionales.",
+  "_baseDto": {
+    "IdDto": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "BaseExtendedDto": {
+      "name": "Ejemplo",
+      "description": "Descripción opcional",
+      "isActive": true,
+      "rules": { "method": "ADD", "comparisonKind": "UNIQUE", "field": ["campo1"] }
+    }
+  },
+
+  "security/auth": {
+    "POST /security/auth/autenticarse": {
+      "username": "usuario.ejemplo",
+      "password": "Password1!abc"
+    },
+    "POST /security/auth/salir": {},
+    "POST /security/auth/esta-token-expirado": {
+      "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    },
+    "POST /security/auth/cierra-sesion": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"
+    }
+  },
+
+  "usuarios": {
+    "GET /usuarios/todos": {},
+    "GET /usuarios/ver-todos-activos-secure": {},
+    "GET /usuarios/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /usuarios/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /usuarios/adicionar": {
+      "name": "Juan Pérez",
+      "description": "Usuario de ejemplo",
+      "isActive": true,
+      "username": "juan.perez",
+      "rol": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "password": "Password1!abc"
+    },
+    "PATCH /usuarios/editar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Juan Pérez",
+      "username": "juan.perez",
+      "description": "Actualizado",
+      "isActive": true,
+      "rol": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"
+    },
+    "PUT /usuarios/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "DELETE /usuarios/eliminar": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "PUT /usuarios/perfil": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "password": "NuevaPass1!xyz",
+      "confirmation": "NuevaPass1!xyz"
+    },
+    "PUT /usuarios/reset-password": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "password": "NuevaPass1!xyz"
+    }
+  },
+
+  "rol": {
+    "GET /rol/todos": {},
+    "GET /rol/ver-todos-activos-secure": {},
+    "GET /rol/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /rol/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /rol/adicionar": {
+      "name": "Rol Ejemplo",
+      "description": "Descripción del rol",
+      "isActive": true,
+      "permissions": ["019bd3ad-aecd-4607-b469-8f8ea90dcb3f"]
+    },
+    "PATCH /rol/editar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Rol Actualizado",
+      "description": "Opcional",
+      "isActive": true,
+      "permissions": ["019bd3ad-aecd-4607-b469-8f8ea90dcb3f"]
+    },
+    "PUT /rol/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "DELETE /rol/eliminar": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" }
+  },
+
+  "super-admin": {
+    "POST /super-admin/sync": {}
+  },
+
+  "configuration": {
+    "GET /configuration/todos": {},
+    "GET /configuration/ver-todos-activos-secure": {},
+    "GET /configuration/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /configuration/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /configuration/adicionar": {
+      "name": "Config Principal",
+      "description": "Configuración del sistema",
+      "isActive": true,
+      "from": "noreply@ejemplo.com",
+      "notification_time": 60,
+      "mail_user": "user",
+      "mail_port": "587",
+      "mail_pass": "secret",
+      "mail_host": "smtp.ejemplo.com",
+      "ldap_url": "ldap://ldap.ejemplo.com",
+      "ldaap_bind_dn": "cn=admin,dc=ejemplo,dc=com",
+      "ldap_bind_password": "secret",
+      "ldap_base_dn": "dc=ejemplo,dc=com",
+      "ldap_time_out": 5000,
+      "ldap_tls": true,
+      "ldap_tls_reject_unathorized": false,
+      "ldap_domain": "EJEMPLO",
+      "ldap_users_ou": "ou=users"
+    },
+    "PATCH /configuration/actualizar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Config Actualizada",
+      "notification_time": 120
+    },
+    "PUT /configuration/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" }
+  },
+
+  "comun/departamentos": {
+    "GET /comun/departamentos/todos": {},
+    "GET /comun/departamentos/ver-todos-activos-secure": {},
+    "GET /comun/departamentos/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /comun/departamentos/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /comun/departamentos/adicionar": {
+      "name": "Departamento Taller",
+      "description": "Área de taller",
+      "isActive": true
+    },
+    "PATCH /comun/departamentos/actualizar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Departamento Taller",
+      "description": "Actualizado",
+      "isActive": true
+    },
+    "PUT /comun/departamentos/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" }
+  },
+
+  "comun/equipos": {
+    "GET /comun/equipos/todos": {},
+    "GET /comun/equipos/ver-todos-activos-secure": {},
+    "GET /comun/equipos/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /comun/equipos/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /comun/equipos/adicionar": {
+      "name": "Equipo PC-01",
+      "description": "Computadora oficina",
+      "isActive": true
+    },
+    "PATCH /comun/equipos/actualizar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Equipo PC-01",
+      "description": "Actualizado",
+      "isActive": true
+    },
+    "PUT /comun/equipos/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" }
+  },
+
+  "comun/aft": {
+    "GET /comun/aft/todos": {},
+    "GET /comun/aft/ver-todos-activos-secure": {},
+    "GET /comun/aft/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /comun/aft/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /comun/aft/adicionar": {
+      "name": "AFT Ejemplo",
+      "description": "Activo fijo de taller",
+      "isActive": true,
+      "equipo": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "departamento": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "user": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"
+    },
+    "PATCH /comun/aft/actualizar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "AFT Actualizado",
+      "equipo": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "departamento": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "user": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"
+    },
+    "PUT /comun/aft/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" }
+  },
+
+  "taller/solicitudes": {
+    "GET /taller/solicitudes/todos": {},
+    "GET /taller/solicitudes/ver-todos-activos-secure": {},
+    "GET /taller/solicitudes/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /taller/solicitudes/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /taller/solicitudes/adicionar": {
+      "name": "Solicitud Ejemplo",
+      "description": "Reparación equipo",
+      "isActive": true,
+      "aft": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "solicitante": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "tipo": "Reparación",
+      "estado": "solicitada"
+    },
+    "PATCH /taller/solicitudes/actualizar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Solicitud Actualizada",
+      "aft": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "solicitante": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "tipo": "Mantenimiento",
+      "estado": "asignada"
+    },
+    "PUT /taller/solicitudes/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "PUT /taller/solicitudes/valorar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "evaluacion": "Buena",
+      "nota": "Servicio satisfactorio"
+    },
+    "GET /taller/solicitudes/obtener-solicitudes": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "PUT /taller/solicitudes/cancelar-solicitud": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "PUT /taller/solicitudes/rechazar-solicitud": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /taller/solicitudes/obtener-solicitudes-no-asignadas": {},
+    "GET /taller/solicitudes/obtener-solicitudes-asignadas": {},
+    "GET /taller/solicitudes/obtener-solicitudes-en-ejecucion": {},
+    "GET /taller/solicitudes/obtener-solicitudes-evaluadas": {},
+    "GET /taller/solicitudes/obtener-solicitudes-rechazadas": {},
+    "GET /taller/solicitudes/obtener-solicitudes-no-posibles": {},
+    "GET /taller/solicitudes/obtener-solicitudes-realizadas": {},
+    "GET /taller/solicitudes/estados": {},
+    "GET /taller/solicitudes/evaluaciones": {}
+  },
+
+  "taller/ordenes": {
+    "GET /taller/ordenes/todos": {},
+    "GET /taller/ordenes/ver-todos-activos-secure": {},
+    "GET /taller/ordenes/ver-uno-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /taller/ordenes/ver-uno-activo-secure": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "POST /taller/ordenes/adicionar": {
+      "name": "Orden Ejemplo",
+      "description": "Orden de trabajo",
+      "isActive": true,
+      "tecnico": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "estado": "asignada",
+      "nota": "Revisar equipo en oficina 3",
+      "solicitud": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"
+    },
+    "PATCH /taller/ordenes/actualizar": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "name": "Orden Actualizada",
+      "tecnico": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "estado": "en_ejecucion",
+      "nota": "En progreso",
+      "solicitud": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"
+    },
+    "PUT /taller/ordenes/cambiar-estado": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "PATCH /taller/ordenes/cambiar-estado-ordenes-y-solicitudes": {
+      "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "newOrderState": "en_ejecucion",
+      "newRequestState": "en_ejecucion"
+    },
+    "GET /taller/ordenes/obtener-ordenes-tecnico": { "id": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" },
+    "GET /taller/ordenes/obtener-ordenes-asignadas": {},
+    "GET /taller/ordenes/obtener-ordenes-en-ejecucion": {},
+    "GET /taller/ordenes/obtener-ordenes-cerradas": {},
+    "GET /taller/ordenes/obtener-ordenes-no-solucionadas": {},
+    "GET /taller/ordenes/estados": {}
+  },
+
+  "notifications": {
+    "GET /notifications/all": {},
+    "POST /notifications/read-solicitud": {
+      "notificationId": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "destinationId": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "isReaded": true
+    },
+    "POST /notifications/read-order": {
+      "notificationId": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "destinationId": "019bd3ad-aecd-4607-b469-8f8ea90dcb3f",
+      "isReaded": true
+    }
+  },
+
+  "trazas": {
+    "GET /trazas/ver": {}
+  },
+
+  "_enums": {
+    "TipoEnum (solicitudes)": ["Mantenimiento", "Reparación", "Instalación"],
+    "EstadoEnum (solicitudes)": ["solicitada", "asignada", "en_ejecucion", "realizada", "rechazada", "cancelar", "no_posible", "evaluada"],
+    "EstadoEnum (ordenes)": ["solicitada", "asignada", "en_ejecucion", "realizada", "rechazada", "no_posible"],
+    "EvalEnum": ["Buena", "Mala", "Regular"],
+    "notifyEnum": ["users", "role", "text"],
+    "MethodEnum (rules)": ["ADD", "EDIT", "ERASE"],
+    "KindEnum (rules)": ["UNIQUE"]
+  }
+}
