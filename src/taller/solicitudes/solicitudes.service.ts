@@ -15,6 +15,7 @@ import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
 import { EstadoEnum } from './enum/estado.enum';
 import { ReturnDto } from './../../common/base/dto';
 import { CodeEnum } from './../../common/enum/code.enum';
+import { Ordenes } from '../ordenes/entities/ordenes.entity';
 
 
 @Injectable()
@@ -31,6 +32,8 @@ UpdateSolicitudesDto> {
     private readonly notificationRepository: Repository<Notification>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Ordenes)
+    private readonly ordenesRepository: Repository<Ordenes>,
   ) {
     super(repository)
   }
@@ -115,9 +118,8 @@ UpdateSolicitudesDto> {
 
   async Evaluate(dto: EvalSolicitudDto,traza: CreateTrazaDto) {
     const solicitud = await this.repository.findOne({
-      where: {
-        id: dto.id
-      }
+      where: { id: dto.id },
+      relations: ['solicitante'],
     });
     if (!solicitud) {
       return {
@@ -139,6 +141,22 @@ UpdateSolicitudesDto> {
     solicitud.estado = EstadoEnum.EVALUADA;
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
+
+    const order = await this.ordenesRepository.findOne({
+      where: { solicitud: { id: solicitud.id } },
+      relations: ['tecnico'],
+    });
+    if (order?.tecnico?.id) {
+      const notification = new Notification();
+      notification.userOrigin = solicitud.solicitante?.id ?? ''; // UUID del solicitante que evaluó
+      notification.destinyType = notifyEnum.USERS;
+      notification.destinyUser = [
+        { id: order.tecnico.id, isReaded: false, servicioID: solicitud.id, orderID: order.id },
+      ];
+      notification.message = `La solicitud ${solicitud.codigo} ha sido evaluada por el cliente.`;
+      await this.notificationRepository.save(notification);
+    }
+
     return {
       isSuccess: true,
       data: solicitud,
@@ -159,9 +177,8 @@ UpdateSolicitudesDto> {
 
   async RejectRequest(dto: IdDto, traza: CreateTrazaDto) {
     const solicitud = await this.repository.findOne({
-      where: {
-        id: dto.id
-      }
+      where: { id: dto.id },
+      relations: ['solicitante'],
     });
     if (!solicitud) {
       return {
@@ -181,6 +198,18 @@ UpdateSolicitudesDto> {
     solicitud.estado = EstadoEnum.RECHAZADA;
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
+
+    if (solicitud.solicitante?.id) {
+      const notification = new Notification();
+      notification.userOrigin = 'Sistema';
+      notification.destinyType = notifyEnum.TEXT;
+      notification.destinyUser = [
+        { id: solicitud.solicitante.id, isReaded: false, servicioID: solicitud.id },
+      ];
+      notification.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
+      await this.notificationRepository.save(notification);
+    }
+
     return {
       isSuccess: true,
       data: solicitud,

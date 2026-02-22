@@ -6,10 +6,11 @@ import { SolicitudesController } from './solicitudes.controller';
 import { Traza } from 'src/security/trazas/entities/traza.entity';
 import { Notification } from 'src/notify/notifications/entities/notification.entity';
 import { User } from 'src/security/user/entities/user.entity';
+import { Ordenes } from '../ordenes/entities/ordenes.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Solicitudes, Traza, Notification, User])
+    TypeOrmModule.forFeature([Solicitudes, Traza, Notification, User, Ordenes])
   ],
   controllers: [SolicitudesController],
   providers: [SolicitudesService],

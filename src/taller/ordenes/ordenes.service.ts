@@ -12,7 +12,6 @@ import { EstadoEnum } from './enum/estado.enum';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { ReturnDto } from '../../common/base/dto';
 import { CodeEnum } from '../../common/enum/code.enum';
-import { CreateNotificationDto } from '../../notify/notifications/dto/create-notification.dto';
 import { notifyEnum } from '../../common/enum/notify.enum';
 import { User } from '../../security/user/entities/user.entity';
 import { Notification } from '../../notify/notifications/entities/notification.entity';
@@ -53,10 +52,8 @@ UpdateOrdenesDto> {
 
   async Add(createDto: CreateOrdenesDto, traza: CreateTrazaDto) {
     const solicitud = await this.solicitudesRepository.findOne({
-      where:
-      {
-        id: createDto.solicitud
-      }
+      where: { id: createDto.solicitud },
+      relations: ['solicitante'],
     })
 
     if(solicitud.estado != EstadoEnum.SOLICITADA)
@@ -75,6 +72,27 @@ UpdateOrdenesDto> {
 
     solicitud.estado = EstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
+
+    if (result.isSuccess && result.data) {
+      const order = result.data as Ordenes;
+      const notification = new Notification();
+      notification.userOrigin = createDto.tecnico; // UUID del técnico asignado
+      notification.destinyType = notifyEnum.USERS;
+      notification.destinyUser = [
+        { id: createDto.tecnico, isReaded: false, servicioID: solicitud.id, orderID: order.id },
+      ];
+      if (solicitud.solicitante?.id) {
+        notification.destinyUser.push({
+          id: solicitud.solicitante.id,
+          isReaded: false,
+          servicioID: solicitud.id,
+          orderID: order.id,
+        });
+      }
+      notification.message = `La solicitud ${solicitud.codigo} ha sido asignada. Se ha creado una orden.`;
+      await this.notificationRepository.save(notification);
+    }
+
     return result;
   }
 
@@ -107,10 +125,10 @@ UpdateOrdenesDto> {
     dto: UpdateStateOrdenesDto,
     traza: CreateTrazaDto
   ) {
-    // Obtener la orden
+    // Obtener la orden (tecnico es eager; solicitud también)
     const order = await this.repository.findOne({
       where: { id: dto.id },
-      relations: ['solicitud']
+      relations: ['solicitud', 'solicitud.solicitante'],
     });
 
     if (!order) {
@@ -163,54 +181,41 @@ UpdateOrdenesDto> {
 
     // Guardar traza
     await this.trazaRepository.save(traza);
-    // enviar notificaciones a usuario y a Jefe de Taller
-
-    const notificationDto = new CreateNotificationDto();
-    notificationDto.userOrigin = order.tecnico.name;
-    notificationDto.destinyType = notifyEnum.USERS;
-    // completar aqui
+    // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
 
     const jefesTaller = await this.userRepository.find({
-      where:
-      {
-        rol:
-        {id:"019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
-      }
+      where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
-
-
-    notificationDto.destinyUser = jefesTaller.map(user => ({
+    const destinyUser = jefesTaller.map((user) => ({
       id: user.id,
       isReaded: false,
       servicioID: order.solicitud.id,
       orderID: order.id,
     }));
-    notificationDto.destinyUser.push(
-      {
+    if (order.tecnico?.id) {
+      destinyUser.push({
         id: order.tecnico.id,
         isReaded: false,
         servicioID: order.solicitud.id,
         orderID: order.id,
-      }
-    )
-    notificationDto.destinyUser.push(
-      {
+      });
+    }
+    if (order.solicitud.solicitante?.id) {
+      destinyUser.push({
         id: order.solicitud.solicitante.id,
         isReaded: false,
         servicioID: order.solicitud.id,
         orderID: order.id,
-      }
-    )
-    // arreglar
-    notificationDto.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado  ${dto.newRequestState}`;
+      });
+    }
 
-    const notification = new Notification()
-    notification.destinyType = notificationDto.destinyType
-    notification.destinyUser = notificationDto.destinyUser
-    notification.userOrigin = notificationDto.userOrigin
-    notification.message = notificationDto.message
-    await this.notificationRepository.save(notification)
+    const notification = new Notification();
+    notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
+    notification.destinyType = notifyEnum.USERS;
+    notification.destinyUser = destinyUser;
+    notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    await this.notificationRepository.save(notification);
 
 
     return {
