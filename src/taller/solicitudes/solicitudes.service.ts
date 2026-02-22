@@ -70,7 +70,8 @@ UpdateSolicitudesDto> {
 
     notificationDto.destinyUser = users.map(user => ({
       id: user.id,
-      isReaded: false,
+      isSolititudRead: false,
+      isOrderRead: false,
       servicioID: (result.data as Solicitudes).id,
 
     }));
@@ -80,7 +81,7 @@ UpdateSolicitudesDto> {
         id: createDto.solicitante
       }
     });
-    notificationDto.message = `Solicitud ${result.data} ha sido creada por ${user.name}`;
+    notificationDto.message = `Solicitud ${(result.data as Solicitudes).codigo} ha sido creada por ${user.name}`;
 
     const notification = new Notification()
     notification.destinyType = notificationDto.destinyType
@@ -151,7 +152,7 @@ UpdateSolicitudesDto> {
       notification.userOrigin = solicitud.solicitante?.id ?? ''; // UUID del solicitante que evaluó
       notification.destinyType = notifyEnum.USERS;
       notification.destinyUser = [
-        { id: order.tecnico.id, isReaded: false, servicioID: solicitud.id, orderID: order.id },
+        { id: order.tecnico.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
       ];
       notification.message = `La solicitud ${solicitud.codigo} ha sido evaluada por el cliente.`;
       await this.notificationRepository.save(notification);
@@ -204,7 +205,7 @@ UpdateSolicitudesDto> {
       notification.userOrigin = 'Sistema';
       notification.destinyType = notifyEnum.TEXT;
       notification.destinyUser = [
-        { id: solicitud.solicitante.id, isReaded: false, servicioID: solicitud.id },
+        { id: solicitud.solicitante.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id },
       ];
       notification.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
       await this.notificationRepository.save(notification);

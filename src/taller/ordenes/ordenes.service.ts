@@ -79,12 +79,13 @@ UpdateOrdenesDto> {
       notification.userOrigin = createDto.tecnico; // UUID del técnico asignado
       notification.destinyType = notifyEnum.USERS;
       notification.destinyUser = [
-        { id: createDto.tecnico, isReaded: false, servicioID: solicitud.id, orderID: order.id },
+        { id: createDto.tecnico, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
       ];
       if (solicitud.solicitante?.id) {
         notification.destinyUser.push({
           id: solicitud.solicitante.id,
-          isReaded: false,
+          isSolititudRead: false,
+          isOrderRead: false,
           servicioID: solicitud.id,
           orderID: order.id,
         });
@@ -189,14 +190,16 @@ UpdateOrdenesDto> {
 
     const destinyUser = jefesTaller.map((user) => ({
       id: user.id,
-      isReaded: false,
+      isSolititudRead: false,
+      isOrderRead: false,
       servicioID: order.solicitud.id,
       orderID: order.id,
     }));
     if (order.tecnico?.id) {
       destinyUser.push({
         id: order.tecnico.id,
-        isReaded: false,
+        isSolititudRead: false,
+        isOrderRead: false,
         servicioID: order.solicitud.id,
         orderID: order.id,
       });
@@ -204,7 +207,8 @@ UpdateOrdenesDto> {
     if (order.solicitud.solicitante?.id) {
       destinyUser.push({
         id: order.solicitud.solicitante.id,
-        isReaded: false,
+        isSolititudRead: false,
+        isOrderRead: false,
         servicioID: order.solicitud.id,
         orderID: order.id,
       });

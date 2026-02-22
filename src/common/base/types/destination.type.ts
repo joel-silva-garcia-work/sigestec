@@ -1,6 +1,7 @@
  export type DestinationType = {
   id: string;
-  isReaded: boolean;
+  isSolititudRead: boolean;
+  isOrderRead: boolean;
   servicioID?: string;
   orderID?: string;
 };

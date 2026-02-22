@@ -21,7 +21,7 @@ export class NotificationsService extends BaseServiceCRUD<
   ) {
     super(repository);
   }
-  async updateReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
+  async updateSolicitudReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
     const notification = await this.repository.findOne({
       where: { id: dto.notificationId },
@@ -45,8 +45,39 @@ export class NotificationsService extends BaseServiceCRUD<
       return returnDto;
     }
 
-    destination.isReaded = dto.isReaded;
-    returnDto.data = this.repository.save(notification);
+    destination.isSolititudRead = dto.isReaded;
+    returnDto.isSuccess = true;
+    returnDto.data = await this.repository.save(notification);
+    return returnDto;
+  }
+
+  async updateOrderReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
+    const returnDto = new ReturnDto();
+    const notification = await this.repository.findOne({
+      where: { id: dto.notificationId },
+    });
+
+    if (!notification) {
+      returnDto.isSuccess = false;
+      returnDto.errorMessage = 'Notification not found';
+      returnDto.returnCode = CodeEnum.NOT_FOUND;
+      return returnDto;
+    }
+
+    const destination = notification.destinyUser.find(
+      (dest) => dest.id === dto.destinationId,
+    );
+
+    if (!destination) {
+      returnDto.isSuccess = false;
+      returnDto.errorMessage = 'Destination not found in notification';
+      returnDto.returnCode = CodeEnum.NOT_FOUND;
+      return returnDto;
+    }
+
+    destination.isOrderRead = dto.isReaded;
+    returnDto.isSuccess = true;
+    returnDto.data = await this.repository.save(notification);
     return returnDto;
   }
   async GetAll(): Promise<ReturnDto> {
