@@ -1,9 +1,9 @@
 import {
-  ConflictException,
   createParamDecorator,
   ExecutionContext,
 } from '@nestjs/common';
 import { User } from '../../user/entities/user.entity';
+import { ReturnDto } from '../../../common/base/dto';
 
 export const GetUser = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
@@ -16,43 +16,39 @@ export const GetUser = createParamDecorator(
   },
 );
 
-export const GetUserAdmin = createParamDecorator(
+export const GetUserRegistered = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const request: Express.Request = ctx.switchToHttp().getRequest();
     const user: Partial<User> =  request.user;
-    console.log(request.user)
-
-    if (user) { // Propietario
-  return user;
-} else {
-  throw new ConflictException('El usuario no tiene permisos para ejecutar esta acción');
-}
-},
-);
-
-export const GetUserEmployee = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
-    const request: Express.Request = ctx.switchToHttp().getRequest();
-    const user: Partial<User> = request.user;
-
-    // Verifica si el ID del rol del usuario es 2
-    // if (user && user.role.id === 2) {
+    if (user) 
+    { // cualquie usuario registrado
       return user;
-    // } else {
-      // throw new ConflictException('El usuario no es empleado.');
-    // }
+    } 
+    else {
+      const returnDto = new ReturnDto()
+      returnDto.isSuccess = false;
+      returnDto.errorMessage =('El usuario no tiene permisos para ejecutar esta acción');
+      return returnDto
+    }
   },
 );
 
-export const GetUserEntity = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext) => {
+
+export const GetUserAdmin= createParamDecorator(
+  (data: string | undefined, ctx: ExecutionContext) => {
     const request: Express.Request = ctx.switchToHttp().getRequest();
-    const user: Partial<User> = request.user;
-    // Verifica si el ID del rol del usuario es 3
-    if (user) {
+    const user: Partial<User> =  request.user;
+    if ((user && user.rol.id === "dc3ab524-d911-4f8a-93a6-5ab0a524f2bc")){// Administrador
+
       return user;
-    } // else {
-      // throw new ConflictException('El usuario no es cliente.');
-    // }
+    } 
+    else {
+      const returnDto = new ReturnDto()
+      returnDto.isSuccess = false;
+      returnDto.errorMessage =('El usuario no tiene permisos para ejecutar esta acción');
+      return returnDto
+    }
   },
 );
+
+

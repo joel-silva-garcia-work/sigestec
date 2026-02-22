@@ -44,10 +44,6 @@ export enum InvalidStandardDTO {
   WRONG_DESCRIPTION_TYPE = 'WRONG_DESCRIPTION_TYPE',
 }
 
-
-
-
-
 export const validateTest = (
   testName: string,
   result: any,

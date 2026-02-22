@@ -19,6 +19,8 @@ import { JwtGuard } from 'src/security/auth/guard';
 import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { ReturnDto } from 'src/common/base/dto';
 import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
+import { EstadoEnum } from './enum/estado.enum';
+import { EvalEnum } from './enum/eval.enum';
 
 @ApiTags('solicitudes')
 @Controller('taller/solicitudes')
@@ -251,5 +253,25 @@ SolicitudesService
   @ApiResponse({ status: 400, description: 'Solicitudes realizadas no encontradas' })
   async GetRealizedRequests(@Req() request: Request) {
     return await this.Service.GetRealizedRequests();
+  }
+
+  @Get('estados')
+  @ApiOperation({ summary: 'Obtener el enum de estados de solicitudes para select' })
+  @ApiResponse({ status: 200, description: 'Lista key/value para usar en select' })
+  getEstados(): { key: string; value: string }[] {
+    return (Object.entries(EstadoEnum) as [string, string][]).map(([k, v]) => ({
+      key: k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: v,
+    }));
+  }
+
+  @Get('evaluaciones')
+  @ApiOperation({ summary: 'Obtener el enum de evaluaciones para select' })
+  @ApiResponse({ status: 200, description: 'Lista key/value para usar en select' })
+  getEvaluaciones(): { key: string; value: string }[] {
+    return (Object.entries(EvalEnum) as [string, string][]).map(([k, v]) => ({
+      key: k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: v,
+    }));
   }
 }

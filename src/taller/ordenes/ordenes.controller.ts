@@ -19,6 +19,7 @@ import { JwtGuard } from '../../security/auth/guard';
 import { RouteAccessGuard } from '../../common/guards/route-access.guard';
 import { ReturnDto } from '../../common/base/dto';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
+import { EstadoEnum } from './enum/estado.enum';
 
 @ApiTags('ordenes')
 @Controller('taller/ordenes')
@@ -197,5 +198,14 @@ OrdenesService
   async GetUnsolvedOrders(@Req() request: Request) {
     return await this.Service.GetUnsolvedOrders();
   }
-  
+
+  @Get('estados')
+  @ApiOperation({ summary: 'Obtener el enum de estados de órdenes para select' })
+  @ApiResponse({ status: 200, description: 'Lista key/value para usar en select' })
+  getEstados(): { key: string; value: string }[] {
+    return (Object.entries(EstadoEnum) as [string, string][]).map(([k, v]) => ({
+      key: k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: v,
+    }));
+  }
 }
