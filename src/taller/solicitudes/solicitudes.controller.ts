@@ -21,6 +21,7 @@ import { ReturnDto } from 'src/common/base/dto';
 import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
 import { EstadoEnum } from './enum/estado.enum';
 import { EvalEnum } from './enum/eval.enum';
+import { TipoEnum } from './enum/tipo.enum';
 
 @ApiTags('solicitudes')
 @Controller('taller/solicitudes')
@@ -278,8 +279,8 @@ SolicitudesService
   @Get('tipo-solicitud')
   @ApiOperation({ summary: 'Obtener el enum de evaluaciones para select' })
   @ApiResponse({ status: 200, description: 'Lista key/value para usar en select' })
-  getEvaluaciones(): { key: string; value: string }[] {
-    return (Object.entries(TipoSolicitudEnum) as [string, string][]).map(([k, v]) => ({
+  getTipoSolicitud(): { key: string; value: string }[] {
+    return (Object.entries(TipoEnum) as [string, string][]).map(([k, v]) => ({
       key: k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
       value: v,
     }));
