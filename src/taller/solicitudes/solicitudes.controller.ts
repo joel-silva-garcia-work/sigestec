@@ -274,4 +274,14 @@ SolicitudesService
       value: v,
     }));
   }
+
+  @Get('tipo-solicitud')
+  @ApiOperation({ summary: 'Obtener el enum de evaluaciones para select' })
+  @ApiResponse({ status: 200, description: 'Lista key/value para usar en select' })
+  getEvaluaciones(): { key: string; value: string }[] {
+    return (Object.entries(TipoSolicitudEnum) as [string, string][]).map(([k, v]) => ({
+      key: k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+      value: v,
+    }));
+  }
 }
