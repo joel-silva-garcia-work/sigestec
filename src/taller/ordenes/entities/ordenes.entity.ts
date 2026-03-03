@@ -1,11 +1,11 @@
 import { Entity, Column, ManyToOne, OneToOne } from 'typeorm';
-import { BasicInformationEntity } from '../../../common/base/entities';
+import { BasicEntity, BasicInformationEntity } from '../../../common/base/entities';
 import { User } from '../../../security/user/entities/user.entity';
 import { EstadoEnum } from '../enum/estado.enum';
 import { Solicitudes } from '../../solicitudes/entities/solicitudes.entity';
 
 @Entity({ name: 'ordenes', schema: 'taller' })
-export class Ordenes extends BasicInformationEntity {
+export class Ordenes extends BasicEntity {
 
   @ManyToOne(() => User, {eager:true, nullable: true})
   // //(user) => user.tecnicos)

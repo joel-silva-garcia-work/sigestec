@@ -55,7 +55,6 @@ UpdateOrdenesDto> {
       where: { id: createDto.solicitud },
       relations: ['solicitante'],
     })
-
     if(solicitud.estado != EstadoEnum.SOLICITADA)
       {
         const returnDto = new ReturnDto
