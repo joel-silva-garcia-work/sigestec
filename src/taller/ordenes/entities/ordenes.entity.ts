@@ -12,7 +12,7 @@ export class Ordenes extends BasicInformationEntity {
   // @JoinColumn({ name: 'user' })
   tecnico: User;  
 
-  @OneToOne(()=> Solicitudes,{eager: true,nullable:false})
+  @ManyToOne(()=> Solicitudes,{eager: true,nullable:false})
   solicitud: Solicitudes
 
   @Column({
