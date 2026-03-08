@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { generateString, InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { BaseServiceCRUD } from './../../common/base/class/base.service.crud.class';
@@ -16,6 +16,7 @@ import { EstadoEnum } from './enum/estado.enum';
 import { ReturnDto } from './../../common/base/dto';
 import { CodeEnum } from './../../common/enum/code.enum';
 import { Ordenes } from '../ordenes/entities/ordenes.entity';
+import { Configuration } from 'src/config/configuration/entities/configuration.entity';
 
 
 @Injectable()
@@ -34,6 +35,8 @@ UpdateSolicitudesDto> {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Ordenes)
     private readonly ordenesRepository: Repository<Ordenes>,
+    @InjectRepository(Configuration)
+    private readonly configRepository: Repository<Configuration>,
   ) {
     super(repository)
   }
@@ -52,7 +55,7 @@ UpdateSolicitudesDto> {
   }
 
   async Add(createDto: CreateSolicitudesDto, traza: CreateTrazaDto) {
-    createDto.codigo = await this.createCode()
+    createDto.codigo = await this.nextNumber()
     const result = await super.create(createDto);
     if (result.isSuccess) {
       this.trazaRepository.save(traza);
@@ -357,6 +360,46 @@ UpdateSolicitudesDto> {
     }
     return code
   }
+  async nextTo() {
+    // Obtenemos el primer registro de config, el campo comercialCode, le sumamos 1, lo guardamos y lo retornamos
+    const config = await this.configRepository.findOne({
+      where: {
+        key: 0,
+      },
+    });
+    if (!config) {
+      throw new ConflictException('No existe configuración para prefactura');
+    }
+    let currentCode = Number(config.numero) || 0;
+    currentCode += 1;
+    config.numero = currentCode;
+    await this.configRepository.save(config);
+    return currentCode;
+  }
+  async nextNumber(): Promise<string> {
+    const currentYear = new Date().getFullYear();
+    const numero = await this.nextTo();
 
+    const config = await this.configRepository.findOne({
+      where: {
+        key: 0,
+      },
+    });
+
+    let nextPrefactura: number;
+
+    // If no previous prefactura exists or it's from a different year, start from 1
+    if (config.actual_year !== currentYear) {
+      nextPrefactura = 1;
+      // aca salvo en config
+      config.actual_year = currentYear;
+      config.numero = nextPrefactura;
+      await this.configRepository.save(config);
+    } else {
+      nextPrefactura = numero;
+    }
+
+    return `${nextPrefactura}/${currentYear}`;
+  }
 
 }

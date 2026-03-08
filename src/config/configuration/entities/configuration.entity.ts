@@ -22,5 +22,14 @@ export class Configuration extends BasicInformationEntity {
   mail_host: string;
 
   @Column()
-  reset_pswd: number;
+  reset_pswd: number;  
+  
+  @Column({default:0})
+  numero: number; 
+
+  @Column({default:2026})
+  actual_year: number;
+  
+  @Column({default:0})
+  key: number
 }
