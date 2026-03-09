@@ -64,13 +64,13 @@ export class AuthService {
 
       returnDto.isSuccess = true;
       returnDto.returnCode = CodeEnum.OK;
-      returnDto.data = {
-        name: user.name,
-        username: user.username,
-        refresh_token: refresh_token,
-        rol:user.rol.name,
-        auth_method: 'LOCAL'
-      };
+        returnDto.data = {
+          name: user.name,
+          username: user.username,
+          refresh_token: refresh_token,
+            rol:user.rol.name,
+          auth_method: 'LOCAL'
+        };
       return returnDto;
 
     } catch (error) {
