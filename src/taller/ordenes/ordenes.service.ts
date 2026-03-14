@@ -181,7 +181,7 @@ UpdateOrdenesDto> {
     
 
     // Guardar traza
-    await this.trazaRepository.save(traza);
+    // await this.trazaRepository.save(traza);
     // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
 
     const jefesTaller = await this.userRepository.find({
