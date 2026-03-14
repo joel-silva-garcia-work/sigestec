@@ -1,7 +1,7 @@
 export enum SolEstadoEnum {
   SOLICITADA = 'Solicitada',
   ASIGNADA = 'Asignada',
-  EN_EJECUCION = 'En Ejecucion',
+  EN_EJECUCION = 'En Proceso',
   REALIZADA = 'Realizada',
   RECHAZADA = 'Rechazada',
   CANCELAR = 'Cancelar',
