@@ -8,7 +8,8 @@ import { SolEstadoEnum } from 'src/taller/solicitudes/enum/estado.enum';
 export class CloseOrdenDto extends IdDto {
 
   @ApiProperty({
-    type:EstadoEnum
+    enum: EstadoEnum,
+    description: 'Estado al cerrar la orden (ej: REALIZADA, NO_POSIBLE)',
   })
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
   @IsEnum(EstadoEnum, {message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_ENUM.message})
