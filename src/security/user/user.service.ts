@@ -53,7 +53,7 @@ UpdateUserDto> {
   async Edit(updateDto: UpdateUserDto, traza: CreateTrazaDto) {
     const result = await super.update(updateDto);
     if (result.isSuccess) {
-      traza.traza = result.data ? (result.data as User).toRecord() : result.data;
+      traza.traza = result.data ;//? (result.data as User).toRecord() : result.data;
       this.trazaRepository.save(traza);
     }
     return result;
