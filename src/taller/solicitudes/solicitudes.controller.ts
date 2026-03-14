@@ -22,6 +22,7 @@ import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
 import { SolEstadoEnum } from './enum/estado.enum';
 import { EvalEnum } from './enum/eval.enum';
 import { TipoEnum } from './enum/tipo.enum';
+import { CloseSolicitudDto } from './dto/close-solicitud.dto';
 
 @ApiTags('solicitudes')
 @Controller('taller/solicitudes')
@@ -284,5 +285,24 @@ SolicitudesService
       key: k.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
       value: v,
     }));
+  }
+
+    // @UseGuards(JwtGuard)
+  @Put('cerrar-solicitud')
+  @ApiOperation({ summary: 'Cerrar una orden' })
+  @ApiResponse({ status: 200, description: 'Orden cerrada exitosamente, returnDto.data={object closed}' })
+  @ApiResponse({ status: 400, description: 'Orden no encontrada o no se pudo cerrar' })
+  async CloseRequest(
+    @Body(new ValidationPipe({ transform: true })) dto: CloseSolicitudDto,
+    @Req() request: Request,
+  ) {
+    const clientIp = request.socket.remoteAddress;
+    const ipv4 = clientIp?.replace('::ffff:', '');
+    const executedUrl = request.originalUrl;
+    const traza = new CreateTrazaDto();
+    traza.ip = ipv4;
+    traza.url = executedUrl;
+    traza.traza = dto;
+    return await this.Service.CloseRequest(dto, traza);
   }
 }

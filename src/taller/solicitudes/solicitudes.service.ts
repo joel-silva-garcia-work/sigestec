@@ -17,6 +17,7 @@ import { ReturnDto } from './../../common/base/dto';
 import { CodeEnum } from './../../common/enum/code.enum';
 import { Ordenes } from '../ordenes/entities/ordenes.entity';
 import { Configuration } from 'src/config/configuration/entities/configuration.entity';
+import { CloseSolicitudDto } from './dto/close-solicitud.dto';
 
 
 @Injectable()
@@ -342,7 +343,6 @@ UpdateSolicitudesDto> {
     while(exist)
     {
       
-      console.log(code)
       const solicitud = await this.repository.findOne({
         where:
         {
@@ -401,5 +401,84 @@ UpdateSolicitudesDto> {
 
     return `${nextPrefactura}/${currentYear}`;
   }
+
+    async CloseRequest(
+    dto: CloseSolicitudDto,
+    traza: CreateTrazaDto
+  ) {
+    // Obtener la orden (tecnico es eager; solicitud también)
+    const request = await this.repository.findOne({
+      where: { id: dto.id }
+    });
+
+    if (!request) {
+      return {
+        isSuccess: false,
+        message: 'Solicitud no encontrada'
+      };
+    }
+    let exchange = false 
+
+    // 2 si estado de orden es en ejecucion solo puede pasar a Realizada  o 2 no posible
+    if(request.estado == SolEstadoEnum.SOLICITADA ){
+      request.nota = dto.nota
+      request.estado = SolEstadoEnum.RECHAZADA
+      exchange = true
+    } 
+     
+    if(exchange == false)
+    {
+      const returnDto = new ReturnDto
+      returnDto.isSuccess = false
+      returnDto.errorMessage = "El estado de la solicitud no es posible cambiar"
+      returnDto.errorCode = CodeEnum.BAD_REQUEST
+      return returnDto
+    }
+    // Cambiar estado 
+    
+    await this.repository.save(request);
+    
+
+    // Guardar traza
+    // await this.trazaRepository.save(traza);
+    // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
+
+    const jefesTaller = await this.userRepository.find({
+      where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
+    });
+
+    const destinyUser = jefesTaller.map((user) => ({
+      id: user.id,
+      isSolititudRead: false,
+      isOrderRead: false,
+      servicioID: request.id,
+      orderID: null,
+    }));
+
+    if (request.solicitante?.id) {
+      destinyUser.push({
+        id: request.solicitante.id,
+        isSolititudRead: false,
+        isOrderRead: false,
+        servicioID: request.id,
+        orderID: null,
+      });
+    }
+
+    const notification = new Notification();
+    notification.userOrigin = request.solicitante?.id ?? ''; // UUID del solicitante que cambió el estado
+    notification.destinyType = notifyEnum.USERS;
+    notification.destinyUser = destinyUser;
+    notification.message = `La Orden de la solicitud ${request.codigo} ha pasado a estado ${SolEstadoEnum.RECHAZADA}`;
+    await this.notificationRepository.save(notification);
+
+
+    return {
+      isSuccess: true,
+      message: 'Estados actualizados correctamente',
+      data: request
+    };
+  }
+  
 
 }

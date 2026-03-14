@@ -249,7 +249,6 @@ UpdateOrdenesDto> {
     }
     let exchange = false 
 
-
     // 2 si estado de orden es en ejecucion solo puede pasar a Realizada  o 2 no posible
     if(order.estado == EstadoEnum.EN_EJECUCION ){
       if( dto.newOrderState === EstadoEnum.REALIZADA )
