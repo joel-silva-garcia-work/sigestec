@@ -12,7 +12,7 @@ import { CreateNotificationDto } from './../../notify/notifications/dto/create-n
 import { notifyEnum } from './../../common/enum/notify.enum';
 import { User } from './../../security/user/entities/user.entity';
 import { EvalSolicitudDto } from './dto/eval-solicitud.dto';
-import { EstadoEnum } from './enum/estado.enum';
+import { SolEstadoEnum } from './enum/estado.enum';
 import { ReturnDto } from './../../common/base/dto';
 import { CodeEnum } from './../../common/enum/code.enum';
 import { Ordenes } from '../ordenes/entities/ordenes.entity';
@@ -132,7 +132,7 @@ UpdateSolicitudesDto> {
         message: 'Solicitud no encontrada'
       };
     }
-    if(solicitud.estado != EstadoEnum.REALIZADA)
+    if(solicitud.estado != SolEstadoEnum.REALIZADA)
     {
       const returnDto = new ReturnDto
       returnDto.errorCode = CodeEnum.BAD_REQUEST
@@ -142,7 +142,7 @@ UpdateSolicitudesDto> {
     }
     solicitud.evaluacion = dto.evaluacion;
     solicitud.nota = dto.nota;
-    solicitud.estado = EstadoEnum.EVALUADA;
+    solicitud.estado = SolEstadoEnum.EVALUADA;
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
 
@@ -191,7 +191,7 @@ UpdateSolicitudesDto> {
         errorMessage: 'Solicitud no encontrada'
       };
     }
-    if(solicitud.estado != EstadoEnum.SOLICITADA)
+    if(solicitud.estado != SolEstadoEnum.SOLICITADA)
     {
       const returnDto = new ReturnDto
       returnDto.isSuccess = false
@@ -199,7 +199,7 @@ UpdateSolicitudesDto> {
       returnDto.errorCode = CodeEnum.BAD_REQUEST
       return returnDto
     }
-    solicitud.estado = EstadoEnum.RECHAZADA;
+    solicitud.estado = SolEstadoEnum.RECHAZADA;
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
 
@@ -234,7 +234,7 @@ UpdateSolicitudesDto> {
         errorMessage: 'Solicitud no encontrada'
       };
     }
-    if(solicitud.estado != EstadoEnum.SOLICITADA)
+    if(solicitud.estado != SolEstadoEnum.SOLICITADA)
     {
       const returnDto = new ReturnDto
       returnDto.isSuccess = false
@@ -242,7 +242,7 @@ UpdateSolicitudesDto> {
       returnDto.errorCode = CodeEnum.BAD_REQUEST
       return returnDto
     }
-    solicitud.estado = EstadoEnum.CANCELAR;
+    solicitud.estado = SolEstadoEnum.CANCELAR;
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
     return {
@@ -256,7 +256,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.SOLICITADA
+        estado: SolEstadoEnum.SOLICITADA
       }
     });
     returnDto.data = solicitudes;
@@ -268,7 +268,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.ASIGNADA
+        estado: SolEstadoEnum.ASIGNADA
       }
     });
     returnDto.data = solicitudes;
@@ -280,7 +280,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.EN_EJECUCION
+        estado: SolEstadoEnum.EN_EJECUCION
       }
     });
     returnDto.data = solicitudes;
@@ -292,7 +292,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.EVALUADA
+        estado: SolEstadoEnum.EVALUADA
       }
     });
     returnDto.data = solicitudes;
@@ -304,7 +304,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.RECHAZADA
+        estado: SolEstadoEnum.RECHAZADA
       }
     });
     returnDto.data = solicitudes;
@@ -316,7 +316,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.NO_POSIBLE
+        estado: SolEstadoEnum.NO_POSIBLE
       }
     });
     returnDto.data = solicitudes;
@@ -328,7 +328,7 @@ UpdateSolicitudesDto> {
     const returnDto = new ReturnDto();
     const solicitudes = await this.repository.find({
       where: {
-        estado: EstadoEnum.REALIZADA
+        estado: SolEstadoEnum.REALIZADA
       }
     });
     returnDto.data = solicitudes;

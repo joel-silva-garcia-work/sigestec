@@ -1,10 +1,10 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { BasicInformationEntity } from './../../../common/base/entities';
 import { TipoEnum } from '../enum/tipo.enum';
-import { EstadoEnum } from '../enum/estado.enum';
 import { EvalEnum } from '../enum/eval.enum';
 import { User } from './../../../security/user/entities/user.entity';
 import { Aft } from './../../../comun/aft/entities/aft.entity';
+import { SolEstadoEnum } from '../enum/estado.enum';
 
 @Entity({ name: 'solicitudes', schema: 'taller' })
 export class Solicitudes extends BasicInformationEntity {
@@ -31,10 +31,10 @@ export class Solicitudes extends BasicInformationEntity {
   tipo: TipoEnum;
 
   @Column({
-    enum:EstadoEnum,
-    default:EstadoEnum.SOLICITADA
+    enum: SolEstadoEnum,
+    default:SolEstadoEnum.SOLICITADA
   })
-  estado: EstadoEnum;
+  estado: SolEstadoEnum;
 
   @Column({ nullable: true })
   evaluacion: EvalEnum;

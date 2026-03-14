@@ -9,6 +9,7 @@ import { Traza } from '../../security/trazas/entities/traza.entity';
 import { CreateTrazaDto } from '../../security/trazas/dto/create-traza.dto';
 import { Solicitudes } from '../solicitudes/entities/solicitudes.entity';
 import { EstadoEnum } from './enum/estado.enum';
+import { SolEstadoEnum } from './../solicitudes/enum/estado.enum';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { ReturnDto } from '../../common/base/dto';
 import { CodeEnum } from '../../common/enum/code.enum';
@@ -55,7 +56,7 @@ UpdateOrdenesDto> {
       where: { id: createDto.solicitud },
       relations: ['solicitante'],
     })
-    if(solicitud.estado != EstadoEnum.SOLICITADA)
+    if(solicitud.estado != SolEstadoEnum.SOLICITADA)
       {
         const returnDto = new ReturnDto
         returnDto.isSuccess = false
@@ -69,7 +70,7 @@ UpdateOrdenesDto> {
     }
 
 
-    solicitud.estado = EstadoEnum.ASIGNADA;
+    solicitud.estado = SolEstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
 
     if (result.isSuccess && result.data) {
@@ -143,19 +144,19 @@ UpdateOrdenesDto> {
     // 1 si orden asignada prox estado puede ser 1 en ejecucion  
     if(order.estado == EstadoEnum.ASIGNADA && 
       ( dto.newOrderState === EstadoEnum.EN_EJECUCION) &&
-      ( dto.newRequestState === EstadoEnum.EN_EJECUCION)
+      ( dto.newRequestState === SolEstadoEnum.EN_EJECUCION)
     )
     {
       exchange = true
     }
     // 2 si estado de orden es en ejecucion solo puede pasar a Realizada  o 2 no posible
     if(order.estado == EstadoEnum.EN_EJECUCION ){
-      if( dto.newOrderState === EstadoEnum.REALIZADA && dto.newRequestState === EstadoEnum.REALIZADA)
+      if( dto.newOrderState === EstadoEnum.REALIZADA && dto.newRequestState === SolEstadoEnum.REALIZADA)
         {
           exchange = true
         }  
       else if (dto.newOrderState === EstadoEnum.NO_POSIBLE && 
-        (dto.newRequestState === EstadoEnum.RECHAZADA || dto.newRequestState === EstadoEnum.NO_POSIBLE))
+        (dto.newRequestState === SolEstadoEnum.RECHAZADA || dto.newRequestState === SolEstadoEnum.NO_POSIBLE))
         {
           exchange = true
         }    

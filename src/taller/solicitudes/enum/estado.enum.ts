@@ -1,4 +1,4 @@
-export enum EstadoEnum {
+export enum SolEstadoEnum {
   SOLICITADA = 'Solicitada',
   ASIGNADA = 'Asignada',
   EN_EJECUCION = 'En Ejecucion',

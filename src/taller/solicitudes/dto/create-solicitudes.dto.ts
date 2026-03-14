@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { BaseExtendedDto } from './../../../common/base/dto/base.dto';
 import { DTO_MESSAGES } from './../../../common/resource/dto.messages';
 import { TipoEnum } from '../enum/tipo.enum';
-import { EstadoEnum } from '../enum/estado.enum';
+import { SolEstadoEnum } from '../enum/estado.enum';
 
 export class CreateSolicitudesDto extends BaseExtendedDto {
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
@@ -20,8 +20,8 @@ export class CreateSolicitudesDto extends BaseExtendedDto {
   @IsEnum(TipoEnum)
   tipo: TipoEnum;
 
-  @IsEnum(EstadoEnum)
-  estado: EstadoEnum  = EstadoEnum.SOLICITADA;
+  @IsEnum(SolEstadoEnum)
+  estado: SolEstadoEnum  = SolEstadoEnum.SOLICITADA;
 
   codigo: string
 }
