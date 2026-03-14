@@ -1,10 +1,10 @@
 export enum EstadoEnum {
-  SOLICITADA = 'solicitada',
-  ASIGNADA = 'asignada',
-  EN_EJECUCION = 'en_ejecucion',
-  REALIZADA = 'realizada',
-  RECHAZADA = 'rechazada',
-  CANCELAR = 'cancelar',
-  NO_POSIBLE = 'no_posible',
-  EVALUADA = 'evaluada'
+  SOLICITADA = 'Solicitada',
+  ASIGNADA = 'Asignada',
+  EN_EJECUCION = 'En Ejecucion',
+  REALIZADA = 'Realizada',
+  RECHAZADA = 'Rechazada',
+  CANCELAR = 'Cancelar',
+  NO_POSIBLE = 'Solicitud no realizable',
+  EVALUADA = 'Evaluada'
 }
