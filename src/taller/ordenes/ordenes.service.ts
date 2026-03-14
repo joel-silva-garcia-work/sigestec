@@ -16,6 +16,7 @@ import { CodeEnum } from '../../common/enum/code.enum';
 import { notifyEnum } from '../../common/enum/notify.enum';
 import { User } from '../../security/user/entities/user.entity';
 import { Notification } from '../../notify/notifications/entities/notification.entity';
+import { CloseOrdenDto } from './dto/close-orden.dto';
 
 
 @Injectable()
@@ -229,6 +230,117 @@ UpdateOrdenesDto> {
       data: order
     };
   }
+
+    async CloseOrder(
+    dto: CloseOrdenDto,
+    traza: CreateTrazaDto
+  ) {
+    // Obtener la orden (tecnico es eager; solicitud también)
+    const order = await this.repository.findOne({
+      where: { id: dto.id },
+      relations: ['solicitud', 'solicitud.solicitante'],
+    });
+
+    if (!order) {
+      return {
+        isSuccess: false,
+        message: 'Orden no encontrada'
+      };
+    }
+    let exchange = false 
+
+
+    // 2 si estado de orden es en ejecucion solo puede pasar a Realizada  o 2 no posible
+    if(order.estado == EstadoEnum.EN_EJECUCION ){
+      if( dto.newOrderState === EstadoEnum.REALIZADA )
+        {
+          dto.newRequestState = SolEstadoEnum.REALIZADA
+          order.notaTec = dto.notaGen
+          exchange = true
+        }  
+      else if (dto.newOrderState === EstadoEnum.NO_POSIBLE) 
+        {
+          dto.newRequestState = SolEstadoEnum.NO_POSIBLE
+          order.notaTec = dto.notaGen
+          exchange = true
+        }    
+    } 
+     
+    if(exchange == false)
+    {
+      const returnDto = new ReturnDto
+      returnDto.isSuccess = false
+      returnDto.errorMessage = "El estado de la orden no es posible cambiar"
+      returnDto.errorCode = CodeEnum.BAD_REQUEST
+      return returnDto
+    }
+    // Cambiar estado de la orden
+    order.estado = dto.newOrderState;
+    await this.repository.save(order);
+    
+    // Cambiar estado de la solicitud asociada
+    const solicitud = order.solicitud
+    solicitud.estado = dto.newRequestState;
+    if(dto.newRequestState === SolEstadoEnum.NO_POSIBLE)
+    {
+      solicitud.nota = dto.notaGen
+    }
+    else
+    {
+      solicitud.nota = null
+    }
+    await this.solicitudesRepository.save(solicitud);
+    
+
+    // Guardar traza
+    // await this.trazaRepository.save(traza);
+    // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
+
+    const jefesTaller = await this.userRepository.find({
+      where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
+    });
+
+    const destinyUser = jefesTaller.map((user) => ({
+      id: user.id,
+      isSolititudRead: false,
+      isOrderRead: false,
+      servicioID: order.solicitud.id,
+      orderID: order.id,
+    }));
+    if (order.tecnico?.id) {
+      destinyUser.push({
+        id: order.tecnico.id,
+        isSolititudRead: false,
+        isOrderRead: false,
+        servicioID: order.solicitud.id,
+        orderID: order.id,
+      });
+    }
+    if (order.solicitud.solicitante?.id) {
+      destinyUser.push({
+        id: order.solicitud.solicitante.id,
+        isSolititudRead: false,
+        isOrderRead: false,
+        servicioID: order.solicitud.id,
+        orderID: order.id,
+      });
+    }
+
+    const notification = new Notification();
+    notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
+    notification.destinyType = notifyEnum.USERS;
+    notification.destinyUser = destinyUser;
+    notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    await this.notificationRepository.save(notification);
+
+
+    return {
+      isSuccess: true,
+      message: 'Estados actualizados correctamente',
+      data: order
+    };
+  }
+  
 
   async GetOrdersByTechnician(dto: IdDto) {
     const orders = await this.repository.find({

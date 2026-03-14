@@ -20,6 +20,7 @@ import { RouteAccessGuard } from '../../common/guards/route-access.guard';
 import { ReturnDto } from '../../common/base/dto';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { EstadoEnum } from './enum/estado.enum';
+import { CloseOrdenDto } from './dto/close-orden.dto';
 
 @ApiTags('ordenes')
 @Controller('taller/ordenes')
@@ -135,6 +136,26 @@ OrdenesService
     traza.traza = dto;
     return await this.Service.State(dto, traza);
   }
+
+  // @UseGuards(JwtGuard)
+  @Put('cerrar-orden')
+  @ApiOperation({ summary: 'Cerrar una orden' })
+  @ApiResponse({ status: 200, description: 'Orden cerrada exitosamente, returnDto.data={object closed}' })
+  @ApiResponse({ status: 400, description: 'Orden no encontrada o no se pudo cerrar' })
+  async CloseOrder(
+    @Body(new ValidationPipe({ transform: true })) dto: CloseOrdenDto,
+    @Req() request: Request,
+  ) {
+    const clientIp = request.socket.remoteAddress;
+    const ipv4 = clientIp?.replace('::ffff:', '');
+    const executedUrl = request.originalUrl;
+    const traza = new CreateTrazaDto();
+    traza.ip = ipv4;
+    traza.url = executedUrl;
+    traza.traza = dto;
+    return await this.Service.CloseOrder(dto, traza);
+  }
+
 
   // @UseGuards(JwtGuard)
   @Patch('cambiar-estado-ordenes-y-solicitudes')

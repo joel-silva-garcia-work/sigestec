@@ -41,4 +41,6 @@ export class Solicitudes extends BasicInformationEntity {
 
   @Column({ nullable: true })
   nota: string;
+
+
 }
