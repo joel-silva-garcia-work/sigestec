@@ -101,12 +101,16 @@ UpdateUserDto> {
       }
     user.hash = await argon.hash(dto.password);
 
-    await this.repository.save(user)
+    // await this.repository.save(user)
 
-    const result = await super.active(dto);
-    if (result.isSuccess) {
+    // const result = await super.active(dto);
+    const result = await this.repository.save(user);
+    if (result) {
       // traza.traza = result.data ? (result.data as User).toRecord() : result.data;
       this.trazaRepository.save(traza);
+      const returnDto = new ReturnDto
+        returnDto.isSuccess = true
+        return returnDto
     }
     return result;
   }
