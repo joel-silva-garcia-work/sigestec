@@ -21,9 +21,9 @@ export class Ordenes extends BasicEntity {
   })
   estado: EstadoEnum;
 
-  @Column()
+  @Column({nullable: true})
   notaJT: string;
 
-  @Column()
+  @Column({nullable: true})
   notaTec: string;
 }
