@@ -14,8 +14,7 @@ export class UpdateStateOrdenesDto extends IdDto {
   @IsEnum(EstadoEnum, {message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_ENUM.message})
   newOrderState: EstadoEnum; 
 
-  @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
-  @IsEnum(EstadoEnum, {message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_ENUM.message})
-  newRequestState: SolEstadoEnum
+
+  newRequestState?: SolEstadoEnum
 
 }

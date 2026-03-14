@@ -143,21 +143,22 @@ UpdateOrdenesDto> {
     // Reglas para cambio de estados
     // 1 si orden asignada prox estado puede ser 1 en ejecucion  
     if(order.estado == EstadoEnum.ASIGNADA && 
-      ( dto.newOrderState === EstadoEnum.EN_EJECUCION) &&
-      ( dto.newRequestState === SolEstadoEnum.EN_EJECUCION)
+      ( dto.newOrderState === EstadoEnum.EN_EJECUCION) 
     )
     {
+      dto.newRequestState = SolEstadoEnum.EN_EJECUCION
       exchange = true
     }
     // 2 si estado de orden es en ejecucion solo puede pasar a Realizada  o 2 no posible
     if(order.estado == EstadoEnum.EN_EJECUCION ){
-      if( dto.newOrderState === EstadoEnum.REALIZADA && dto.newRequestState === SolEstadoEnum.REALIZADA)
+      if( dto.newOrderState === EstadoEnum.REALIZADA )
         {
+          dto.newRequestState = SolEstadoEnum.REALIZADA
           exchange = true
         }  
-      else if (dto.newOrderState === EstadoEnum.NO_POSIBLE && 
-        (dto.newRequestState === SolEstadoEnum.RECHAZADA || dto.newRequestState === SolEstadoEnum.NO_POSIBLE))
+      else if (dto.newOrderState === EstadoEnum.NO_POSIBLE) 
         {
+          dto.newRequestState = SolEstadoEnum.NO_POSIBLE
           exchange = true
         }    
     } 
