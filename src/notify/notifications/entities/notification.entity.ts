@@ -17,6 +17,27 @@ export class Notification extends BasicEntity {
     })
     destinyType: notifyEnum
 
+    @Column({
+        type: "varchar",nullable:true
+    })
+    OriginID: string  
+
+    @Column({
+        type: "varchar",nullable:true
+    })
+    DestinyID: string  
+
+    @Column({
+        type: "boolean",nullable:true,default:true
+    })
+    Order: boolean  
+
+    @Column({
+        type: "varchar",nullable:true
+    })
+    ObjectID: string  
+    
+    //Quitar
     @Column(
         'json'
     )

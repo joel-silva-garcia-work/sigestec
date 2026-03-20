@@ -33,25 +33,28 @@ RolService
     super(Service);
   }
 
+  
   @UseGuards(JwtGuard)
   @Get('todos')
   override async findItems(@GetUser() user: User) {
     return super.findItems();
   }
 
+  
   @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure', 'ver-todos-activos-public'])
   override async findActiveItems(@GetUser() user: User) {
     return super.findActiveItems();
   }
 
+  
   @UseGuards(JwtGuard)
   @Post('adicionar')
   override async create(
   @Body(new ValidationPipe({ transform: true }))
   createDto: CreateRolDto,
   @GetUser() user: User) {
-    return super.create(createDto);
+    return null;
   }
 
   @UseGuards(JwtGuard)
@@ -60,7 +63,7 @@ RolService
   @Body(new ValidationPipe({ transform: true }))
   updateDto: UpdateRolDto,
   @GetUser() user: User) {
-    return super.update(updateDto);
+    return null;
   }
 
   @UseGuards(JwtGuard)
@@ -69,7 +72,7 @@ RolService
   @Body(new ValidationPipe({ transform: true }))
   dto: IdDto,
   @GetUser() user: User) {
-    return super.remove(dto);
+    return null;
   }
 
   @UseGuards(JwtGuard)
@@ -78,6 +81,6 @@ RolService
   @Body(new ValidationPipe({ transform: true }))
   dto: IdDto,
   @GetUser() user: User) {
-    return await super.active(dto);
+    return null;
   }
 }
