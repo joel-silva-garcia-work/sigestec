@@ -10,26 +10,23 @@ export class CreateNotificationDto {
     @IsNotEmpty()
     userOrigin: string
 
-    
     @ApiProperty({ type:String })
     @IsString()
     @IsUUID()
     @IsNotEmpty()
-    DestinyID: string  
+    destinyID: string  
 
     @ApiProperty({ type:Boolean, default: true })
     @IsString()
     @IsUUID()
     @IsNotEmpty()
-    Order: boolean  
+    isOrder: boolean  
 
     @ApiProperty({ type:String })
     @IsString()
     @IsUUID()
     @IsNotEmpty()
-    ObjectID: string  
-
-
+    objectID: string  
 
     @ApiProperty({})
     @IsEnum(notifyEnum)
@@ -41,6 +38,8 @@ export class CreateNotificationDto {
         }
     )
     message: string
+
+    isRead: false
     
     //quitar
     @ApiProperty({
@@ -48,6 +47,5 @@ export class CreateNotificationDto {
     })
     @IsArray()
     destinyUser: DestinationType[]
-
 
 }

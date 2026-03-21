@@ -27,65 +27,108 @@ export class NotificationsService extends BaseServiceCRUD<
     return result;
   }
 
-  async updateSolicitudReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
+  async ReadAllNotification(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
-    const notification = await this.repository.findOne({
-      where: { id: dto.notificationId },
+
+    const notifications = await this.repository.findBy({
+      destinyID: dto.destinationId 
     });
 
-    if (!notification) {
-      returnDto.isSuccess = false;
-      returnDto.errorMessage = 'Notification not found';
-      returnDto.returnCode = CodeEnum.NOT_FOUND;
-      return returnDto;
+    returnDto.isSuccess = false
+    returnDto.returnCode = CodeEnum.NOT_FOUND
+
+    if(notifications != null )
+    {
+      notifications.forEach(async (notification) => {
+        notification.isRead= true,
+        await this.repository.save(notification)
+      }) 
+      returnDto.isSuccess = true
+      returnDto.returnCode = CodeEnum.OK
     }
-
-    const destination = notification.destinyUser.find(
-      (dest) => dest.id === dto.destinationId,
-    );
-
-    if (!destination) {
-      returnDto.isSuccess = false;
-      returnDto.errorMessage = 'Destination not found in notification';
-      returnDto.returnCode = CodeEnum.NOT_FOUND;
-      return returnDto;
-    }
-
-    destination.isSolititudRead = dto.isReaded;
-    returnDto.isSuccess = true;
-    returnDto.data = await this.repository.save(notification);
-    return returnDto;
+    return returnDto
   }
 
-  async updateOrderReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
+  async ReadNotification(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
+
     const notification = await this.repository.findOne({
-      where: { id: dto.notificationId },
+      where:{id: dto.notificationId} 
     });
 
-    if (!notification) {
-      returnDto.isSuccess = false;
-      returnDto.errorMessage = 'Notification not found';
-      returnDto.returnCode = CodeEnum.NOT_FOUND;
-      return returnDto;
+    returnDto.isSuccess = false
+    returnDto.returnCode = CodeEnum.NOT_FOUND
+
+    if(notification != null )
+    {
+      notification.isRead= true,
+      await this.repository.save(notification)
+
+      returnDto.isSuccess = true
+      returnDto.returnCode = CodeEnum.OK
     }
-
-    const destination = notification.destinyUser.find(
-      (dest) => dest.id === dto.destinationId,
-    );
-
-    if (!destination) {
-      returnDto.isSuccess = false;
-      returnDto.errorMessage = 'Destination not found in notification';
-      returnDto.returnCode = CodeEnum.NOT_FOUND;
-      return returnDto;
-    }
-
-    destination.isOrderRead = dto.isReaded;
-    returnDto.isSuccess = true;
-    returnDto.data = await this.repository.save(notification);
-    return returnDto;
+    return returnDto
   }
+
+  // async updateSolicitudReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
+  //   const returnDto = new ReturnDto();
+  //   const notification = await this.repository.findOne({
+  //     where: { id: dto.notificationId },
+  //   });
+
+  //   if (!notification) {
+  //     returnDto.isSuccess = false;
+  //     returnDto.errorMessage = 'Notification not found';
+  //     returnDto.returnCode = CodeEnum.NOT_FOUND;
+  //     return returnDto;
+  //   }
+
+  //   const destination = notification.destinyUser.find(
+  //     (dest) => dest.id === dto.destinationId,
+  //   );
+
+  //   if (!destination) {
+  //     returnDto.isSuccess = false;
+  //     returnDto.errorMessage = 'Destination not found in notification';
+  //     returnDto.returnCode = CodeEnum.NOT_FOUND;
+  //     return returnDto;
+  //   }
+
+  //   destination.isSolititudRead = dto.isReaded;
+  //   returnDto.isSuccess = true;
+  //   returnDto.data = await this.repository.save(notification);
+  //   return returnDto;
+  // }
+
+  // async updateOrderReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
+  //   const returnDto = new ReturnDto();
+  //   const notification = await this.repository.findOne({
+  //     where: { id: dto.notificationId },
+  //   });
+
+  //   if (!notification) {
+  //     returnDto.isSuccess = false;
+  //     returnDto.errorMessage = 'Notification not found';
+  //     returnDto.returnCode = CodeEnum.NOT_FOUND;
+  //     return returnDto;
+  //   }
+
+  //   const destination = notification.destinyUser.find(
+  //     (dest) => dest.id === dto.destinationId,
+  //   );
+
+  //   if (!destination) {
+  //     returnDto.isSuccess = false;
+  //     returnDto.errorMessage = 'Destination not found in notification';
+  //     returnDto.returnCode = CodeEnum.NOT_FOUND;
+  //     return returnDto;
+  //   }
+
+  //   destination.isOrderRead = dto.isReaded;
+  //   returnDto.isSuccess = true;
+  //   returnDto.data = await this.repository.save(notification);
+  //   return returnDto;
+  // }
   async GetAll(): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
     const notification = await this.repository.find({});

@@ -20,17 +20,27 @@ export class Notification extends BasicEntity {
     @Column({
         type: "varchar",nullable:true
     })
-    DestinyID: string  
+    destinyID: string  
 
     @Column({
         type: "boolean",nullable:true,default:true
     })
-    Order: boolean  
+    isOrder: boolean  
 
     @Column({
         type: "varchar",nullable:true
     })
-    ObjectID: string  
+    objectID: string  
+
+    @Column({
+        type: "varchar"
+    })
+    message: string
+  
+    @Column({
+        type: "boolean",nullable:true,default:false
+    })
+    isRead: boolean  
 
     //Quitar
     @Column(
@@ -38,9 +48,6 @@ export class Notification extends BasicEntity {
     )
     destinyUser: DestinationType[]
     
-    @Column({
-        type: "varchar"
-    })
-    message: string
+
 
 }

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   UseGuards,
+  Put,
 } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { CreateNotificationDto } from './dto/create-notification.dto';
@@ -26,15 +27,24 @@ export class NotificationsController {
     return await this.notificationsService.GetAll();
   }
 
-  // @UseGuards(JwtGuard)
-  @Post('read-solicitud')
-  async updateSolicitudReadStatus(@Body() dto: UpdateStateNotificationDto) {
-    return this.notificationsService.updateSolicitudReadStatus(dto);
-  }
+   // @UseGuards(JwtGuard)
+   @Put('read')
+   async updateReadStatus(@Body() dto: UpdateStateNotificationDto) {
+    if(dto.notificationId== "")
+     return this.notificationsService.ReadNotification(dto);
+    else 
+    return this.notificationsService.ReadAllNotification(dto)
+   }
 
-  // @UseGuards(JwtGuard)
-  @Post('read-order')
-  async updateOrderReadStatus(@Body() dto: UpdateStateNotificationDto) {
-    return this.notificationsService.updateOrderReadStatus(dto);
-  }
+  // // @UseGuards(JwtGuard)
+  // @Post('read-solicitud')
+  // async updateSolicitudReadStatus(@Body() dto: UpdateStateNotificationDto) {
+  //   return this.notificationsService.updateSolicitudReadStatus(dto);
+  // }
+
+  // // @UseGuards(JwtGuard)
+  // @Post('read-order')
+  // async updateOrderReadStatus(@Body() dto: UpdateStateNotificationDto) {
+  //   return this.notificationsService.updateOrderReadStatus(dto);
+  // }
 }
