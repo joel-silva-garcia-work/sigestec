@@ -10,20 +10,44 @@ export class CreateNotificationDto {
     @IsNotEmpty()
     userOrigin: string
 
+    
+    @ApiProperty({ type:String })
+    @IsString()
+    @IsUUID()
+    @IsNotEmpty()
+    DestinyID: string  
+
+    @ApiProperty({ type:Boolean, default: true })
+    @IsString()
+    @IsUUID()
+    @IsNotEmpty()
+    Order: boolean  
+
+    @ApiProperty({ type:String })
+    @IsString()
+    @IsUUID()
+    @IsNotEmpty()
+    ObjectID: string  
+
+
+
     @ApiProperty({})
     @IsEnum(notifyEnum)
     @IsNotEmpty()
     destinyType: notifyEnum
 
     @ApiProperty({
+        type:String
+        }
+    )
+    message: string
+    
+    //quitar
+    @ApiProperty({
         isArray:true
     })
     @IsArray()
     destinyUser: DestinationType[]
 
-    @ApiProperty({
-            type:String
-        }
-    )
-    message: string
+
 }

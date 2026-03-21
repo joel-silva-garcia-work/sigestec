@@ -21,6 +21,12 @@ export class NotificationsService extends BaseServiceCRUD<
   ) {
     super(repository);
   }
+
+  override async create(createDto: CreateNotificationDto) {
+    const result = await super.create(createDto);
+    return result;
+  }
+
   async updateSolicitudReadStatus(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
     const notification = await this.repository.findOne({

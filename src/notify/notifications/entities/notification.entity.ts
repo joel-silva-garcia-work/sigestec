@@ -20,11 +20,6 @@ export class Notification extends BasicEntity {
     @Column({
         type: "varchar",nullable:true
     })
-    OriginID: string  
-
-    @Column({
-        type: "varchar",nullable:true
-    })
     DestinyID: string  
 
     @Column({
@@ -36,7 +31,7 @@ export class Notification extends BasicEntity {
         type: "varchar",nullable:true
     })
     ObjectID: string  
-    
+
     //Quitar
     @Column(
         'json'
