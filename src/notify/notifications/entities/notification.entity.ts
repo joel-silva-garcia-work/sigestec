@@ -1,7 +1,6 @@
 import { BasicEntity } from "../../../common/base/entities";
 import { Column, Entity, ManyToOne, OneToMany } from "typeorm";
 import { notifyEnum } from "./../../../common/enum/notify.enum";
-import { DestinationType } from "./../../../common/base/types/destination.type";
 
 @Entity({ name: 'notifications', schema: 'notify' })
 export class Notification extends BasicEntity {
@@ -41,13 +40,4 @@ export class Notification extends BasicEntity {
         type: "boolean",nullable:true,default:false
     })
     isRead: boolean  
-
-    //Quitar
-    @Column(
-        'json'
-    )
-    destinyUser: DestinationType[]
-    
-
-
 }

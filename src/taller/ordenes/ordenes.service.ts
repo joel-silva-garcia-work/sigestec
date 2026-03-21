@@ -74,26 +74,26 @@ UpdateOrdenesDto> {
     solicitud.estado = SolEstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
 
-    if (result.isSuccess && result.data) {
-      const order = result.data as Ordenes;
-      const notification = new Notification();
-      notification.userOrigin = createDto.tecnico; // UUID del técnico asignado
-      notification.destinyType = notifyEnum.USERS;
-      notification.destinyUser = [
-        { id: createDto.tecnico, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
-      ];
-      if (solicitud.solicitante?.id) {
-        notification.destinyUser.push({
-          id: solicitud.solicitante.id,
-          isSolititudRead: false,
-          isOrderRead: false,
-          servicioID: solicitud.id,
-          orderID: order.id,
-        });
-      }
-      notification.message = `La solicitud ${solicitud.codigo} ha sido asignada. Se ha creado una orden.`;
-      await this.notificationRepository.save(notification);
-    }
+    // if (result.isSuccess && result.data) {
+    //   const order = result.data as Ordenes;
+    //   const notification = new Notification();
+    //   notification.userOrigin = createDto.tecnico; // UUID del técnico asignado
+    //   notification.destinyType = notifyEnum.USERS;
+    //   notification.destinyUser = [
+    //     { id: createDto.tecnico, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
+    //   ];
+    //   if (solicitud.solicitante?.id) {
+    //     notification.destinyUser.push({
+    //       id: solicitud.solicitante.id,
+    //       isSolititudRead: false,
+    //       isOrderRead: false,
+    //       servicioID: solicitud.id,
+    //       orderID: order.id,
+    //     });
+    //   }
+    //   notification.message = `La solicitud ${solicitud.codigo} ha sido asignada. Se ha creado una orden.`;
+    //   await this.notificationRepository.save(notification);
+    // }
 
     return result;
   }
@@ -216,12 +216,12 @@ UpdateOrdenesDto> {
       });
     }
 
-    const notification = new Notification();
-    notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
-    notification.destinyType = notifyEnum.USERS;
-    notification.destinyUser = destinyUser;
-    notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    await this.notificationRepository.save(notification);
+    // const notification = new Notification();
+    // notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
+    // notification.destinyType = notifyEnum.USERS;
+    // notification.destinyUser = destinyUser;
+    // notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    // await this.notificationRepository.save(notification);
 
 
     return {
@@ -295,42 +295,42 @@ UpdateOrdenesDto> {
     // await this.trazaRepository.save(traza);
     // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
 
-    const jefesTaller = await this.userRepository.find({
-      where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
-    });
+    // const jefesTaller = await this.userRepository.find({
+    //   where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
+    // });
 
-    const destinyUser = jefesTaller.map((user) => ({
-      id: user.id,
-      isSolititudRead: false,
-      isOrderRead: false,
-      servicioID: order.solicitud.id,
-      orderID: order.id,
-    }));
-    if (order.tecnico?.id) {
-      destinyUser.push({
-        id: order.tecnico.id,
-        isSolititudRead: false,
-        isOrderRead: false,
-        servicioID: order.solicitud.id,
-        orderID: order.id,
-      });
-    }
-    if (order.solicitud.solicitante?.id) {
-      destinyUser.push({
-        id: order.solicitud.solicitante.id,
-        isSolititudRead: false,
-        isOrderRead: false,
-        servicioID: order.solicitud.id,
-        orderID: order.id,
-      });
-    }
+    // const destinyUser = jefesTaller.map((user) => ({
+    //   id: user.id,
+    //   isSolititudRead: false,
+    //   isOrderRead: false,
+    //   servicioID: order.solicitud.id,
+    //   orderID: order.id,
+    // }));
+    // if (order.tecnico?.id) {
+    //   destinyUser.push({
+    //     id: order.tecnico.id,
+    //     isSolititudRead: false,
+    //     isOrderRead: false,
+    //     servicioID: order.solicitud.id,
+    //     orderID: order.id,
+    //   });
+    // }
+    // if (order.solicitud.solicitante?.id) {
+    //   destinyUser.push({
+    //     id: order.solicitud.solicitante.id,
+    //     isSolititudRead: false,
+    //     isOrderRead: false,
+    //     servicioID: order.solicitud.id,
+    //     orderID: order.id,
+    //   });
+    // }
 
-    const notification = new Notification();
-    notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
-    notification.destinyType = notifyEnum.USERS;
-    notification.destinyUser = destinyUser;
-    notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    await this.notificationRepository.save(notification);
+    // const notification = new Notification();
+    // notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
+    // notification.destinyType = notifyEnum.USERS;
+    // notification.destinyUser = destinyUser;
+    // notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    // await this.notificationRepository.save(notification);
 
 
     return {

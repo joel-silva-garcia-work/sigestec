@@ -1,6 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsArray, IsEnum, IsNotEmpty, IsString, IsUUID } from "class-validator";
-import { DestinationType } from "./../../../common/base/types/destination.type";
 import { notifyEnum } from "./../../../common/enum/notify.enum";
 
 export class CreateNotificationDto {
@@ -40,12 +39,4 @@ export class CreateNotificationDto {
     message: string
 
     isRead: false
-    
-    //quitar
-    @ApiProperty({
-        isArray:true
-    })
-    @IsArray()
-    destinyUser: DestinationType[]
-
 }

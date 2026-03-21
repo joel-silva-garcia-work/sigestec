@@ -8,13 +8,15 @@ import { Notification } from 'src/notify/notifications/entities/notification.ent
 import { User } from 'src/security/user/entities/user.entity';
 import { Ordenes } from '../ordenes/entities/ordenes.entity';
 import { Configuration } from 'src/config/configuration/entities/configuration.entity';
+import { NotificationsModule } from 'src/notify/notifications/notifications.module';
+import { NotificationsService } from 'src/notify/notifications/notifications.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Solicitudes, Traza, Notification, User, Ordenes, Configuration])
+    TypeOrmModule.forFeature([Solicitudes, Traza, Notification, User, Ordenes, Configuration, Notification])
   ],
   controllers: [SolicitudesController],
-  providers: [SolicitudesService],
+  providers: [SolicitudesService,NotificationsService],
   exports: [SolicitudesService]
 })
 export class SolicitudesModule {}

@@ -18,6 +18,7 @@ import { CodeEnum } from './../../common/enum/code.enum';
 import { Ordenes } from '../ordenes/entities/ordenes.entity';
 import { Configuration } from 'src/config/configuration/entities/configuration.entity';
 import { CloseSolicitudDto } from './dto/close-solicitud.dto';
+import { NotificationsService } from 'src/notify/notifications/notifications.service';
 
 
 @Injectable()
@@ -30,14 +31,16 @@ UpdateSolicitudesDto> {
     private readonly repository: Repository<Solicitudes>,
     @InjectRepository(Traza)
     private readonly trazaRepository: Repository<Traza>,
-    @InjectRepository(Notification)
-    private readonly notificationRepository: Repository<Notification>,
+    // @InjectRepository(Notification)
+    // private readonly notificationRepository: Repository<Notification>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Ordenes)
     private readonly ordenesRepository: Repository<Ordenes>,
     @InjectRepository(Configuration)
     private readonly configRepository: Repository<Configuration>,
+
+    private readonly notificationService: NotificationsService
   ) {
     super(repository)
   }
@@ -62,37 +65,37 @@ UpdateSolicitudesDto> {
       this.trazaRepository.save(traza);
     }
     
-    const notificationDto = new CreateNotificationDto();
-    notificationDto.userOrigin = createDto.solicitante;
-    notificationDto.destinyType = notifyEnum.USERS;
-    
-    const users = await this.userRepository.find({
-      where: {
-        rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
-      }
-    });
+    // ciclo para crear notificaciones individuales para todos los Jefes de Taller
+    // -  Busco  los Jefes de taller por su ID
+      const users = await this.userRepository.find({
+        where: {
+          rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
+        }
+      });
+    // - Hago ciclo paracrear cada notificacion individual por el DTO de notificaciones
+    users.forEach(async(destinartary) =>{
+      const notificationDto = new CreateNotificationDto();
+      // Añado el solicitante y el tipo de destinatario
+      notificationDto.userOrigin = createDto.solicitante;
+      notificationDto.destinyType = notifyEnum.USERS;
+      // Adiciono el destino
+      notificationDto.destinyID = destinartary.id
+      // obtengo el usuario origen para format el mensaje
 
-    notificationDto.destinyUser = users.map(user => ({
-      id: user.id,
-      isSolititudRead: false,
-      isOrderRead: false,
-      servicioID: (result.data as Solicitudes).id,
+      const userOrigin = await this.userRepository.findOne({
+        where: {
+          id: createDto.solicitante
+        }
+      });
+      notificationDto.message = `Solicitud ${(result.data as Solicitudes).codigo} ha sido creada por ${userOrigin.name}`
+      notificationDto.isRead = false
+      // Determino el tipo de notificacion entre solicitud y Orden
+      notificationDto.isOrder = false
+      // Asigno el ID segun el tipo
+      notificationDto.objectID = (result.data as Solicitudes).id
 
-    }));
-    // revisar que esta salvando
-    const user = await this.userRepository.findOne({
-      where: {
-        id: createDto.solicitante
-      }
-    });
-    notificationDto.message = `Solicitud ${(result.data as Solicitudes).codigo} ha sido creada por ${user.name}`;
-
-    const notification = new Notification()
-    notification.destinyType = notificationDto.destinyType
-    notification.destinyUser = notificationDto.destinyUser
-    notification.userOrigin = notificationDto.userOrigin
-    notification.message = notificationDto.message
-    await this.notificationRepository.save(notification)
+      await this.notificationService.create(notificationDto)
+    })
 
     return result;
   }
@@ -151,16 +154,16 @@ UpdateSolicitudesDto> {
       where: { solicitud: { id: solicitud.id } },
       relations: ['tecnico'],
     });
-    if (order?.tecnico?.id) {
-      const notification = new Notification();
-      notification.userOrigin = solicitud.solicitante?.id ?? ''; // UUID del solicitante que evaluó
-      notification.destinyType = notifyEnum.USERS;
-      notification.destinyUser = [
-        { id: order.tecnico.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
-      ];
-      notification.message = `La solicitud ${solicitud.codigo} ha sido evaluada por el cliente.`;
-      await this.notificationRepository.save(notification);
-    }
+    // if (order?.tecnico?.id) {
+    //   const notification = new Notification();
+    //   notification.userOrigin = solicitud.solicitante?.id ?? ''; // UUID del solicitante que evaluó
+    //   notification.destinyType = notifyEnum.USERS;
+    //   notification.destinyUser = [
+    //     { id: order.tecnico.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
+    //   ];
+    //   notification.message = `La solicitud ${solicitud.codigo} ha sido evaluada por el cliente.`;
+    //   await this.notificationRepository.save(notification);
+    // }
 
     return {
       isSuccess: true,
@@ -204,16 +207,16 @@ UpdateSolicitudesDto> {
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
 
-    if (solicitud.solicitante?.id) {
-      const notification = new Notification();
-      notification.userOrigin = 'Sistema';
-      notification.destinyType = notifyEnum.TEXT;
-      notification.destinyUser = [
-        { id: solicitud.solicitante.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id },
-      ];
-      notification.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
-      await this.notificationRepository.save(notification);
-    }
+    // if (solicitud.solicitante?.id) {
+    //   const notification = new Notification();
+    //   notification.userOrigin = 'Sistema';
+    //   notification.destinyType = notifyEnum.TEXT;
+    //   notification.destinyUser = [
+    //     { id: solicitud.solicitante.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id },
+    //   ];
+    //   notification.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
+    //   await this.notificationRepository.save(notification);
+    // }
 
     return {
       isSuccess: true,
@@ -465,12 +468,12 @@ UpdateSolicitudesDto> {
       });
     }
 
-    const notification = new Notification();
-    notification.userOrigin = request.solicitante?.id ?? ''; // UUID del solicitante que cambió el estado
-    notification.destinyType = notifyEnum.USERS;
-    notification.destinyUser = destinyUser;
-    notification.message = `La Orden de la solicitud ${request.codigo} ha pasado a estado ${SolEstadoEnum.RECHAZADA}`;
-    await this.notificationRepository.save(notification);
+    // const notification = new Notification();
+    // notification.userOrigin = request.solicitante?.id ?? ''; // UUID del solicitante que cambió el estado
+    // notification.destinyType = notifyEnum.USERS;
+    // notification.destinyUser = destinyUser;
+    // notification.message = `La Orden de la solicitud ${request.codigo} ha pasado a estado ${SolEstadoEnum.RECHAZADA}`;
+    // await this.notificationRepository.save(notification);
 
 
     return {
