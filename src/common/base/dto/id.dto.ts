@@ -5,5 +5,5 @@ export class IdDto {
   @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
   @IsUUID(undefined, {message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_UUID.message})
 
-  id:string
+  id?:string
 }

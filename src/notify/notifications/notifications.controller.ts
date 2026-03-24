@@ -16,14 +16,16 @@ import { UpdateStateNotificationDto } from './dto/update-read-notification.dto';
 import { JwtGuard } from '../../security/auth/guard';
 import { GetUser } from '../../security/auth/decorator';
 import { User } from '../../security/user/entities/user.entity';
+import { IdDto } from 'src/common/base/dto/id.dto';
 
 @Controller('notifications')
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Get('all-own-notifications')
-  async findAll(dto:IdDto) {
+  async findAll(@GetUser() user: User, @Body() dto:IdDto) {
+    dto.id = user.id;
     return await this.notificationsService.GetAllOwnNotifications(dto);
   }
 
