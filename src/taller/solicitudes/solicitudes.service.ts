@@ -72,6 +72,7 @@ UpdateSolicitudesDto> {
           rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
         }
       });
+      console.log(users)
     // - Hago ciclo paracrear cada notificacion individual por el DTO de notificaciones
     users.forEach(async(destinartary) =>{
       const notificationDto = new CreateNotificationDto();
@@ -93,7 +94,7 @@ UpdateSolicitudesDto> {
       notificationDto.isOrder = false
       // Asigno el ID segun el tipo
       notificationDto.objectID = (result.data as Solicitudes).id
-
+      console.log(notificationDto)
       await this.notificationService.create(notificationDto)
     })
 

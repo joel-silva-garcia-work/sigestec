@@ -18,9 +18,7 @@ export class UpdateStateNotificationDto {
     @IsOptional()
     isRead?: boolean
 
-    //Quitar
-    @IsBoolean()
-    isReaded: boolean
+
 
     
 

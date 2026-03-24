@@ -36,15 +36,5 @@ export class NotificationsController {
     return this.notificationsService.ReadAllNotification(dto)
    }
 
-  // // @UseGuards(JwtGuard)
-  // @Post('read-solicitud')
-  // async updateSolicitudReadStatus(@Body() dto: UpdateStateNotificationDto) {
-  //   return this.notificationsService.updateSolicitudReadStatus(dto);
-  // }
 
-  // // @UseGuards(JwtGuard)
-  // @Post('read-order')
-  // async updateOrderReadStatus(@Body() dto: UpdateStateNotificationDto) {
-  //   return this.notificationsService.updateOrderReadStatus(dto);
-  // }
 }

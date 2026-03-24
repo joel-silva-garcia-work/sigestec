@@ -23,6 +23,7 @@ export class NotificationsService extends BaseServiceCRUD<
   }
 
   override async create(createDto: CreateNotificationDto) {
+    console.log(createDto)
     const result = await super.create(createDto);
     return result;
   }
