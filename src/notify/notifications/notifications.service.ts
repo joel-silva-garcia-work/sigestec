@@ -8,6 +8,7 @@ import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { ReturnDto } from '../../common/base/dto';
 import { CodeEnum } from '../../common/enum/code.enum';
 import { UpdateStateNotificationDto } from './dto/update-read-notification.dto';
+import { IdDto } from 'src/common/base/dto/id.dto';
 
 @Injectable()
 export class NotificationsService extends BaseServiceCRUD<
@@ -130,10 +131,16 @@ export class NotificationsService extends BaseServiceCRUD<
   //   returnDto.data = await this.repository.save(notification);
   //   return returnDto;
   // }
-  async GetAll(): Promise<ReturnDto> {
+  async GetAllOwnNotifications(dto:IdDto): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
-    const notification = await this.repository.find({});
+    const notification = await this.repository.find({
+      where: {
+        destinyID: dto.id
+      }
+    });
     returnDto.data = notification;
+    returnDto.isSuccess = true;
+    returnDto.returnCode = CodeEnum.OK;
     return returnDto;
-  }
+  }   
 }

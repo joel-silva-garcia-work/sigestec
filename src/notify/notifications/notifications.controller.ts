@@ -22,9 +22,9 @@ export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
   // @UseGuards(JwtGuard)
-  @Get('all')
-  async findAll() {
-    return await this.notificationsService.GetAll();
+  @Get('all-own-notifications')
+  async findAll(dto:IdDto) {
+    return await this.notificationsService.GetAllOwnNotifications(dto);
   }
 
    // @UseGuards(JwtGuard)
