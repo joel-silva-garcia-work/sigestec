@@ -20,7 +20,8 @@ export const GetUserTech = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const request: Express.Request = ctx.switchToHttp().getRequest();
     const user: Partial<User> =  request.user;
-    if ((user && user.rol.id === "86e1985c-576c-4129-b81c-c88270fe9c42")){// Tecnico
+    if ((user && user.rol.id === "86e1985c-576c-4129-b81c-c88270fe9c42" ||
+                  user.rol.id === "4252bf9a-b5f9-4c62-b146-e8977b79431e")){// Tecnico
 
       return user;
     } 
@@ -37,7 +38,9 @@ export const GetUserManager = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const request: Express.Request = ctx.switchToHttp().getRequest();
     const user: Partial<User> =  request.user;
-    if ((user && user.rol.id === "019bd3ad-aecd-4607-b469-8f8ea90dcb3f")){// Jefe de Taller
+    if ((user && user.rol.id === "019bd3ad-aecd-4607-b469-8f8ea90dcb3f" ||
+                 user.rol.id === "4252bf9a-b5f9-4c62-b146-e8977b79431e"
+    )){// Jefe de Taller
 
       return user;
     } 

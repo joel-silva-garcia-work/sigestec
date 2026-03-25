@@ -29,9 +29,11 @@ export class NotificationsController {
     return await this.notificationsService.GetAllOwnNotifications(dto);
   }
 
-   // @UseGuards(JwtGuard)
+   @UseGuards(JwtGuard)
    @Put('read')
-   async updateReadStatus(@Body() dto: UpdateStateNotificationDto) {
+   async updateReadStatus(@Body() dto: UpdateStateNotificationDto,
+   @GetUser() user: User) {
+    dto.destinationId = user.id
     if(dto.notificationId== "")
      return this.notificationsService.ReadNotification(dto);
     else 
