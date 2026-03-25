@@ -18,6 +18,8 @@ import {
 import { JwtGuard } from '../../security/auth/guard';
 import { RouteAccessGuard } from '../../common/guards/route-access.guard';
 import { ReturnDto } from '../../common/base/dto';
+import { GetUserAdmin } from 'src/security/auth/decorator';
+import { User } from 'src/security/user/entities/user.entity';
 
 @ApiTags('aft')
 @Controller('comun/aft')
@@ -43,7 +45,7 @@ AftService
       return super.findActiveItems();
     }
 
-  // @UseGuards(RouteAccessGuard)
+  @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-secure', 'ver-uno-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -60,7 +62,7 @@ AftService
   }
   
   
-  // @UseGuards(RouteAccessGuard)
+  @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-activo-secure', 'ver-uno-activo-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -76,14 +78,15 @@ AftService
     return this.Service.findOneActive(dto);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en aft' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
   @ApiResponse({ status: 400, description: 'Datos inválidos proporcionados' })
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateAftDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserAdmin() user:User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -96,14 +99,16 @@ AftService
     return await this.Service.Add(createDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en aft' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async Edit(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateAftDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserAdmin() user:User
+
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -116,13 +121,14 @@ AftService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de aft' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async State(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
+  @Req() request: Request,
+  @GetUserAdmin() user:User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
