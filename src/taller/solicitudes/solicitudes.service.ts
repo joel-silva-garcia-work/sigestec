@@ -154,9 +154,6 @@ UpdateSolicitudesDto> {
       relations: ['tecnico'],
     });
     if (order?.tecnico?.id) {
-
-          // ciclo para crear notificaciones individuales para todos los Jefes de Taller
-    // -  Busco  los Jefes de taller por su ID
     const notificationDto = new CreateNotificationDto();
 
     notificationDto.userOrigin = solicitud.solicitante.id;
@@ -198,7 +195,8 @@ UpdateSolicitudesDto> {
     return returnDto;
   }
 
-  async RejectRequest(dto: IdDto, traza: CreateTrazaDto) {
+
+  async RejectRequest(dto: IdDto, traza: CreateTrazaDto, idUser: string) {
     const solicitud = await this.repository.findOne({
       where: { id: dto.id },
       relations: ['solicitante'],
@@ -222,16 +220,18 @@ UpdateSolicitudesDto> {
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
 
-    // if (solicitud.solicitante?.id) {
-    //   const notification = new Notification();
-    //   notification.userOrigin = 'Sistema';
-    //   notification.destinyType = notifyEnum.TEXT;
-    //   notification.destinyUser = [
-    //     { id: solicitud.solicitante.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id },
-    //   ];
-    //   notification.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
-    //   await this.notificationRepository.save(notification);
-    // }
+    if (solicitud.solicitante?.id) {
+      const notificationDto = new CreateNotificationDto();
+      // cambiar por usuario autenticado
+      notificationDto.userOrigin = idUser;
+      notificationDto.destinyType = notifyEnum.USERS;
+      notificationDto.destinyID = solicitud.solicitante.id;
+      notificationDto.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
+      notificationDto.isRead = false;
+      notificationDto.isOrder = false;
+      notificationDto.objectID = solicitud.id;
+      await this.notificationService.create(notificationDto);
+    }
 
     return {
       isSuccess: true,

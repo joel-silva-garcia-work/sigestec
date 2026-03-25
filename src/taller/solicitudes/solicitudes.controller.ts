@@ -23,6 +23,8 @@ import { SolEstadoEnum } from './enum/estado.enum';
 import { EvalEnum } from './enum/eval.enum';
 import { TipoEnum } from './enum/tipo.enum';
 import { CloseSolicitudDto } from './dto/close-solicitud.dto';
+import { GetUser } from 'src/security/auth/decorator/get-user.decorator';
+import { User } from 'src/security/user/entities/user.entity';
 
 @ApiTags('solicitudes')
 @Controller('taller/solicitudes')
@@ -183,13 +185,14 @@ SolicitudesService
       traza.traza = dto;
       return await this.Service.CancelRequest(dto, traza);
     }
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Put('rechazar-solicitud')
   @ApiOperation({ summary: 'Rechazar una solicitud' })
   @ApiResponse({ status: 200, description: 'Solicitud rechazada exitosamente,returnDto.data={object}  '})
   @ApiResponse({ status: 400, description: 'Solicitud no encontrada' })
   async RejectRequest(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
+  @Req() request: Request,
+  @GetUser() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -198,7 +201,8 @@ SolicitudesService
     traza.ip = ipv4;
     traza.url = executedUrl;
     traza.traza = dto;
-    return await this.Service.RejectRequest(dto, traza);
+    const idUser = user.id;
+    return await this.Service.RejectRequest(dto, traza, idUser);
   }
   // @UseGuards(JwtGuard)
   @Get('obtener-solicitudes-no-asignadas')
