@@ -18,6 +18,8 @@ import { Request } from 'express';
 import { JwtGuard } from 'src/security/auth/guard';
 import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { ReturnDto } from 'src/common/base/dto';
+import { GetUserManager } from 'src/security/auth/decorator';
+import { User } from 'src/security/user/entities/user.entity';
 
 @ApiTags('equipos')
 @Controller('comun/equipos')
@@ -75,14 +77,15 @@ EquiposService
     return this.Service.findOneActive(dto);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en equipos' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
   @ApiResponse({ status: 400, description: 'Datos inválidos proporcionados' })
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateEquiposDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserManager() user : User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -95,14 +98,16 @@ EquiposService
     return await this.Service.Add(createDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en equipos' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async Edit(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateEquiposDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserManager() user : User
+
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -115,13 +120,15 @@ EquiposService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de equipos' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async State(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
+  @Req() request: Request,
+  @GetUserManager() user : User
+
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
