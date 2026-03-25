@@ -19,6 +19,8 @@ import {
 import { JwtGuard } from '../../security/auth/guard';
 import { RouteAccessGuard } from '../../common/guards/route-access.guard';
 import { ReturnDto } from '../../common/base/dto';
+import { User } from 'src/security/user/entities/user.entity';
+import { GetUserAdmin } from 'src/security/auth/decorator';
 
 @ApiTags('departamentos')
 @Controller('comun/departamentos')
@@ -77,14 +79,15 @@ DepartamentosService
     return this.Service.findOneActive(dto);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en departamentos' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
   @ApiResponse({ status: 400, description: 'Datos inválidos proporcionados' })
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateDepartamentosDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserAdmin() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -97,14 +100,15 @@ DepartamentosService
     return await this.Service.Add(createDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en departamentos' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async Edit(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateDepartamentosDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserAdmin() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -117,13 +121,14 @@ DepartamentosService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de departamentos' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async State(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
+  @Req() request: Request,
+  @GetUserAdmin() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
