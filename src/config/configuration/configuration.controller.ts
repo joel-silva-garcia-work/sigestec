@@ -18,7 +18,7 @@ import { Request } from 'express';
 import { JwtGuard } from 'src/security/auth/guard';
 import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { ReturnDto } from 'src/common/base/dto';
-import { GetUser } from '../../security/auth/decorator';
+import { GetUser, GetUserAdmin } from '../../security/auth/decorator';
 import { User } from '../../security/user/entities/user.entity';
 
 @ApiTags('configuration')
@@ -85,7 +85,7 @@ ConfigurationService
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateConfigurationDto,
     @Req() request: Request,
-    @GetUser() user: User
+    @GetUserAdmin() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -106,7 +106,7 @@ ConfigurationService
   async Edit(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateConfigurationDto,
     @Req() request: Request,
-    @GetUser() user: User
+    @GetUserAdmin() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -126,7 +126,7 @@ ConfigurationService
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async State(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
   @Req() request: Request,
-  @GetUser() user: User
+  @GetUserAdmin() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
