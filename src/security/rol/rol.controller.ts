@@ -18,7 +18,7 @@ import {
 import { IdDto } from 'src/common/base/dto/id.dto';
 import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { JwtGuard } from '../auth/guard';
-import { GetUser } from '../auth/decorator';
+import { GetUser, GetUserAdmin } from '../auth/decorator';
 import { User } from '../user/entities/user.entity';
 import { Request } from 'express';
 
@@ -36,14 +36,14 @@ RolService
   
   @UseGuards(JwtGuard)
   @Get('todos')
-  override async findItems(@GetUser() user: User) {
+  override async findItems(@GetUserAdmin() user: User) {
     return super.findItems();
   }
 
   
   @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure', 'ver-todos-activos-public'])
-  override async findActiveItems(@GetUser() user: User) {
+  override async findActiveItems(@GetUserAdmin() user: User) {
     return super.findActiveItems();
   }
 
@@ -53,7 +53,7 @@ RolService
   override async create(
   @Body(new ValidationPipe({ transform: true }))
   createDto: CreateRolDto,
-  @GetUser() user: User) {
+  @GetUserAdmin() user: User) {
     return null;
   }
 
@@ -62,7 +62,7 @@ RolService
   override async update(
   @Body(new ValidationPipe({ transform: true }))
   updateDto: UpdateRolDto,
-  @GetUser() user: User) {
+  @GetUserAdmin() user: User) {
     return null;
   }
 
@@ -71,7 +71,7 @@ RolService
   override async remove(
   @Body(new ValidationPipe({ transform: true }))
   dto: IdDto,
-  @GetUser() user: User) {
+  @GetUserAdmin() user: User) {
     return null;
   }
 
@@ -80,7 +80,7 @@ RolService
   override async active(
   @Body(new ValidationPipe({ transform: true }))
   dto: IdDto,
-  @GetUser() user: User) {
+  @GetUserAdmin() user: User) {
     return null;
   }
 }
