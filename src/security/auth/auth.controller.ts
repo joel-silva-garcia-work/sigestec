@@ -19,9 +19,6 @@ import { JwtGuard } from './guard';
 import { CreateUserDto } from '../user/dto';
 import { User } from '../user/entities/user.entity';
 import { AuthResponseDto } from './dto/auth-response.dto';
-// import { GetUserAdmin } from './decorator';
-// import { JwtGuard } from './guard';
-// import { User } from '../user/entities/user.entity';
 
 @ApiTags('Authentication')
 @Controller('security/auth')
