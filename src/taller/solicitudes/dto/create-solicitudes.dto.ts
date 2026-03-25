@@ -11,9 +11,8 @@ export class CreateSolicitudesDto extends BaseExtendedDto {
   @IsUUID()
   aft: string;
 
-  @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})
-  @IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})
-  @IsUUID()
+ @IsOptional()
+ @IsUUID()
   solicitante: string;
 
   @IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})

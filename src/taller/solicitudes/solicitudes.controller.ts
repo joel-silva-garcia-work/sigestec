@@ -93,7 +93,7 @@ SolicitudesService
     @Req() request: Request,
     @GetUser() user: User
   ) {
-    createDto.id = user.id
+    createDto.solicitante = user.id
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
     const executedUrl = request.originalUrl;
