@@ -72,7 +72,6 @@ UpdateSolicitudesDto> {
           rol: {id: "019bd3ad-aecd-4607-b469-8f8ea90dcb3f"}
         }
       });
-      console.log(users)
     // - Hago ciclo paracrear cada notificacion individual por el DTO de notificaciones
     users.forEach(async(destinartary) =>{
       const notificationDto = new CreateNotificationDto();
@@ -94,7 +93,6 @@ UpdateSolicitudesDto> {
       notificationDto.isOrder = false
       // Asigno el ID segun el tipo
       notificationDto.objectID = (result.data as Solicitudes).id
-      console.log(notificationDto)
       await this.notificationService.create(notificationDto)
     })
 
@@ -155,16 +153,32 @@ UpdateSolicitudesDto> {
       where: { solicitud: { id: solicitud.id } },
       relations: ['tecnico'],
     });
-    // if (order?.tecnico?.id) {
-    //   const notification = new Notification();
-    //   notification.userOrigin = solicitud.solicitante?.id ?? ''; // UUID del solicitante que evaluó
-    //   notification.destinyType = notifyEnum.USERS;
-    //   notification.destinyUser = [
-    //     { id: order.tecnico.id, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
-    //   ];
-    //   notification.message = `La solicitud ${solicitud.codigo} ha sido evaluada por el cliente.`;
-    //   await this.notificationRepository.save(notification);
-    // }
+    if (order?.tecnico?.id) {
+
+          // ciclo para crear notificaciones individuales para todos los Jefes de Taller
+    // -  Busco  los Jefes de taller por su ID
+    const notificationDto = new CreateNotificationDto();
+
+    notificationDto.userOrigin = solicitud.solicitante.id;
+    notificationDto.destinyType = notifyEnum.USERS;
+    // Adiciono el destino
+    notificationDto.destinyID = order?.tecnico?.id
+    // obtengo el usuario origen para format el mensaje
+
+    const userOrigin = await this.userRepository.findOne({
+      where: {
+        id: solicitud.solicitante.id
+      }
+    });
+    notificationDto.message = `Solicitud ${solicitud.codigo} ha sido creada por ${userOrigin.name}`
+    notificationDto.isRead = false
+    // Determino el tipo de notificacion entre solicitud y Orden
+    notificationDto.isOrder = false
+    // Asigno el ID segun el tipo
+    notificationDto.objectID = solicitud.id
+    await this.notificationService.create(notificationDto)
+
+    }
 
     return {
       isSuccess: true,
