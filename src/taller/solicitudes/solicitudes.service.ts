@@ -483,12 +483,22 @@ UpdateSolicitudesDto> {
       });
     }
 
-    // const notification = new Notification();
-    // notification.userOrigin = request.solicitante?.id ?? ''; // UUID del solicitante que cambió el estado
-    // notification.destinyType = notifyEnum.USERS;
-    // notification.destinyUser = destinyUser;
-    // notification.message = `La Orden de la solicitud ${request.codigo} ha pasado a estado ${SolEstadoEnum.RECHAZADA}`;
-    // await this.notificationRepository.save(notification);
+      const notificationDto = new CreateNotificationDto();
+      // Añado el solicitante y el tipo de destinatario
+      notificationDto.userOrigin = request.solicitante?.id;
+      notificationDto.destinyType = notifyEnum.USERS;
+      // Adiciono el destino
+      notificationDto.destinyID = request.solicitante?.id
+      // obtengo el usuario origen para format el mensaje
+
+      notificationDto.isRead = false
+      // Determino el tipo de notificacion entre solicitud y Orden
+      notificationDto.isOrder = false
+      // Asigno el ID segun el tipo
+      notificationDto.objectID =  request.id
+  
+    notificationDto.message = `La solicitud ${request.codigo} ha pasado a estado ${SolEstadoEnum.RECHAZADA}`;
+    await this.notificationService.create(notificationDto)
 
 
     return {
