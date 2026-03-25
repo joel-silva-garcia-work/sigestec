@@ -19,7 +19,7 @@ import { Request } from 'express';
 import { CreateTrazaDto } from '../trazas/dto/create-traza.dto';
 import { RouteAccessGuard } from 'src/common/guards/route-access.guard';
 import { JwtGuard } from '../auth/guard';
-import { GetUser } from '../auth/decorator';
+import { GetUser, GetUserAdmin } from '../auth/decorator';
 import { User } from './entities/user.entity';
 import { ProfileUserDto } from './dto/profile-user.dto';
 import { ResetPaswdDto } from './dto/reset-password.dto';
@@ -35,6 +35,7 @@ UserService
     super(Service);
   }
 
+  @UseGuards(JwtGuard)
   @Get('todos')
   override async findItems() {
     return super.findItems();
@@ -42,11 +43,11 @@ UserService
 
   @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure'])
-  override async findActiveItems() {
+  override async findActiveItems(@GetUserAdmin() user: User) {
     return super.findActiveItems();
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en user' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
@@ -54,7 +55,7 @@ UserService
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateUserDto,
     @Req() request: Request,  
-    @GetUser() user: User
+    @GetUserAdmin() user: User
   ) {
     // Obtener la IP del cliente
     const clientIp = request.socket.remoteAddress; // Usar socket.remoteAddress en lugar de connection.remoteAddress
@@ -69,7 +70,7 @@ UserService
     return await this.Service.Add(createDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('editar')
   @ApiOperation({ summary: 'Actualizar un item existente en user' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
@@ -77,7 +78,7 @@ UserService
   async Edit(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateUserDto,
     @Req() request: Request,
-    @GetUser() user: User
+    @GetUserAdmin() user: User
   ) {
     // Obtener la IP del cliente
     const clientIp = request.socket.remoteAddress; // Usar socket.remoteAddress en lugar de connection.remoteAddress
@@ -92,14 +93,14 @@ UserService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de user' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async State(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
   @Req() request: Request,
-  @GetUser() user: User
+  @GetUserAdmin() user: User
   ) {
 
     // Obtener la IP del cliente
@@ -116,14 +117,14 @@ UserService
     return await this.Service.State(dto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Delete('eliminar')
   @ApiOperation({ summary: 'Eliminar un item de user' })
   @ApiResponse({ status: 200, description: 'Item eliminado exitosamente,returnDto.data={object deleted}' })
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async Delete(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
   @Req() request: Request,
-  @GetUser() user: User
+  @GetUserAdmin() user: User
   ) {
     // Obtener la IP del cliente
     const clientIp = request.socket.remoteAddress; // Usar socket.remoteAddress en lugar de connection.remoteAddress
@@ -139,7 +140,7 @@ UserService
     return await this.Service.Delete(dto, traza);
   }
 
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @Put('perfil')
     @ApiOperation({ summary: 'Activar/Desactivar un item de user' })
     @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
@@ -162,11 +163,11 @@ UserService
       // Llamar al método create de la clase base, pasando el request  
       return await this.Service.Profile(dto, traza);
     }
-    // @UseGuards(JwtGuard)
+    @UseGuards(JwtGuard)
     @Put('reset-password')
     async ResetPswd(@Body(new ValidationPipe({ transform: true })) dto: ResetPaswdDto,
     @Req() request: Request,
-    @GetUser() user: User
+    @GetUserAdmin() user: User
     ) {
   
       // Obtener la IP del cliente

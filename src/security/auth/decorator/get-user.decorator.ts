@@ -16,12 +16,29 @@ export const GetUser = createParamDecorator(
   },
 );
 
-export const GetUserRegistered = createParamDecorator(
+export const GetUserTech = createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const request: Express.Request = ctx.switchToHttp().getRequest();
     const user: Partial<User> =  request.user;
-    if (user) 
-    { // cualquie usuario registrado
+    if ((user && user.rol.id === "86e1985c-576c-4129-b81c-c88270fe9c42")){// Tecnico
+
+      return user;
+    } 
+    else {
+      const returnDto = new ReturnDto()
+      returnDto.isSuccess = false;
+      returnDto.errorMessage =('El usuario no tiene permisos para ejecutar esta acción');
+      return returnDto
+    }
+  },
+);
+
+export const GetUserManager = createParamDecorator(
+  (data: string | undefined, ctx: ExecutionContext) => {
+    const request: Express.Request = ctx.switchToHttp().getRequest();
+    const user: Partial<User> =  request.user;
+    if ((user && user.rol.id === "019bd3ad-aecd-4607-b469-8f8ea90dcb3f")){// Jefe de Taller
+
       return user;
     } 
     else {
@@ -38,7 +55,7 @@ export const GetUserAdmin= createParamDecorator(
   (data: string | undefined, ctx: ExecutionContext) => {
     const request: Express.Request = ctx.switchToHttp().getRequest();
     const user: Partial<User> =  request.user;
-    if ((user && user.rol.id === "dc3ab524-d911-4f8a-93a6-5ab0a524f2bc")){// Administrador
+    if ((user && user.rol.id === "4252bf9a-b5f9-4c62-b146-e8977b79431e")){// Administrador
 
       return user;
     } 
