@@ -83,15 +83,17 @@ SolicitudesService
     return this.Service.findOneActive(dto);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en solicitudes' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
   @ApiResponse({ status: 400, description: 'Datos inválidos proporcionados' })
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateSolicitudesDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUser() user: User
   ) {
+    createDto.id = user.id
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
     const executedUrl = request.originalUrl;
