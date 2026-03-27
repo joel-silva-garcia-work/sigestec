@@ -76,13 +76,12 @@ UpdateOrdenesDto> {
       const order = await this.repository.findOne({
         where: { solicitud: { id: createDto.solicitud} }
       });
-      console.log(order)
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
       notificationDto.userOrigin = createDto.userID;
       notificationDto.destinyType = notifyEnum.USERS;
       // Adiciono el destino
-      notificationDto.destinyID = createDto.tecnico
+      notificationDto.destinyID = order.tecnico.id
       // obtengo el usuario origen para format el mensaje
 
       notificationDto.isRead = false
@@ -94,7 +93,7 @@ UpdateOrdenesDto> {
     await this.notificationService.create(notificationDto)
 
     // Adiciono el destino
-    notificationDto.destinyID = order.solicitud.solicitante.id
+    notificationDto.destinyID = solicitud.solicitante.id
     // Determino el tipo de notificacion entre solicitud y Orden
     notificationDto.isOrder = true
   
