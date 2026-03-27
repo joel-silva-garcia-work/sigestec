@@ -26,6 +26,7 @@
     "generate": "node generate-resource.js",
     "generate:schema": "ts-node scripts/generate-postgres-schema.ts",
     "generate:resource": "nest g resource && ts-node scripts/modify-resource.ts",
+    "generate:e2e:controllers": "ts-node scripts/generate-e2e-from-controllers.ts",
     "test:all:e2e": "jest --runInBand --verbose --no-cache --config ./test/jest-e2e.json --coverage --coverageReporters=\"text-summary\""
   },
   "dependencies": {
