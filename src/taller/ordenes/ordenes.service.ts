@@ -94,12 +94,12 @@ UpdateOrdenesDto> {
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
     await this.notificationService.create(notificationDto)
 
-    // Adiciono el destino
-    notificationDto.destinyID = order.solicitud.solicitante.id
-    // Determino el tipo de notificacion entre solicitud y Orden
-    notificationDto.isOrder = true
+    // // Adiciono el destino
+    // notificationDto.destinyID = order.solicitud.solicitante.id
+    // // Determino el tipo de notificacion entre solicitud y Orden
+    // notificationDto.isOrder = true
   
-    await this.notificationService.create(notificationDto)
+    // await this.notificationService.create(notificationDto)
     }
 
     return result
@@ -230,7 +230,6 @@ UpdateOrdenesDto> {
   
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
     await this.notificationService.create(notificationDto)
-
     }
     if (order.solicitud.solicitante?.id) {
       const notificationDto = new CreateNotificationDto();
@@ -248,15 +247,6 @@ UpdateOrdenesDto> {
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
     await this.notificationService.create(notificationDto)
     }
-
-    // const notification = new Notification();
-    // notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
-    // notification.destinyType = notifyEnum.USERS;
-    // notification.destinyUser = destinyUser;
-    // notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    // await this.notificationRepository.save(notification);
-
-
     return {
       isSuccess: true,
       message: 'Estados actualizados correctamente',
