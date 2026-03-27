@@ -90,33 +90,27 @@ UpdateOrdenesDto> {
 
       notificationDto.isRead = false
       // Determino el tipo de notificacion entre solicitud y Orden
-      notificationDto.isOrder = false
+      notificationDto.isOrder = true
       // Asigno el ID segun el tipo
       notificationDto.objectID =  order.id
   
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
     await this.notificationService.create(notificationDto)
-    }
 
+    // Adiciono el destino
+    notificationDto.destinyID = order.solicitud.solicitante.id
+    // obtengo el usuario origen para format el mensaje
 
-    if (result.isSuccess && result.data) {
-      const order = result.data as Ordenes;
-
-      const notificationDto = new CreateNotificationDto();
-      // Añado el solicitante y el tipo de destinatario
-      notificationDto.userOrigin = createDto.userID;
-      notificationDto.destinyType = notifyEnum.USERS;
-      // Adiciono el destino
-      notificationDto.destinyID = createDto.tecnico
-      // obtengo el usuario origen para format el mensaje
-
-      notificationDto.isRead = false
-      // Determino el tipo de notificacion entre solicitud y Orden
-      notificationDto.isOrder = false
-      // Asigno el ID segun el tipo
+    notificationDto.isRead = false
+    // Determino el tipo de notificacion entre solicitud y Orden
+    notificationDto.isOrder = false
+    // Asigno el ID segun el tipo
+    notificationDto.objectID =  order.solicitud.id
+  
+    notificationDto.message = `La solicitud ${order.solicitud.codigo} ha sido asignada. Se ha creado una orden.`;
     await this.notificationService.create(notificationDto)
-
     }
+
 
     return result;
   }
