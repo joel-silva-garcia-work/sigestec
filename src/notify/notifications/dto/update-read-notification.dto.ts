@@ -8,12 +8,14 @@ export class UpdateStateNotificationDto {
     @IsOptional()
     notificationId?: string = ""
 
+    @ApiProperty()
+    @IsString()
+    @IsUUID()
     @IsOptional()
     destinationId?: string
 
-    @IsBoolean()
-    @IsOptional()
-    isRead?: boolean
+
+    isRead: boolean = true
 
 
 
