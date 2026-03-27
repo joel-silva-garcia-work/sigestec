@@ -34,11 +34,16 @@ export class NotificationsController {
    async updateReadStatus(@Body() dto: UpdateStateNotificationDto,
    @GetUser() user: User) {
     dto.destinationId = user.id
-    if(dto.notificationId== "")
      return this.notificationsService.ReadNotification(dto);
-    else 
-    return this.notificationsService.ReadAllNotification(dto)
+
    }
 
+   @UseGuards(JwtGuard)
+   @Put('read-all')
+   async updateAllReadStatus(@Body() dto: UpdateStateNotificationDto,
+   @GetUser() user: User) {
+    dto.destinationId = user.id
+    return this.notificationsService.ReadAllNotification(dto)
+   }
 
 }
