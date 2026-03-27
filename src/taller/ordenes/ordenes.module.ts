@@ -10,6 +10,7 @@ import { User } from '../../security/user/entities/user.entity';
 import { UserModule } from '../../security/user/user.module';
 import { Notification } from '../../notify/notifications/entities/notification.entity';
 import { NotificationsModule } from '../../notify/notifications/notifications.module';
+import { NotificationsService } from 'src/notify/notifications/notifications.service';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { NotificationsModule } from '../../notify/notifications/notifications.mo
     NotificationsModule
   ],
   controllers: [OrdenesController],
-  providers: [OrdenesService],
+  providers: [OrdenesService,NotificationsService],
   exports: [OrdenesService]
 })
 export class OrdenesModule {}

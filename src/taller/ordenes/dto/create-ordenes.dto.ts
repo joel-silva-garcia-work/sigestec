@@ -23,4 +23,6 @@ export class CreateOrdenesDto extends BaseDto {
   // @IsEnum(EstadoEnum)
   estado: EstadoEnum=EstadoEnum.ASIGNADA;
 
+  userID: string;
+
 }

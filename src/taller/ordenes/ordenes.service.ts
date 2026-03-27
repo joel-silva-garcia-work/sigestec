@@ -17,6 +17,8 @@ import { notifyEnum } from '../../common/enum/notify.enum';
 import { User } from '../../security/user/entities/user.entity';
 import { Notification } from '../../notify/notifications/entities/notification.entity';
 import { CloseOrdenDto } from './dto/close-orden.dto';
+import { CreateNotificationDto } from 'src/notify/notifications/dto/create-notification.dto';
+import { NotificationsService } from 'src/notify/notifications/notifications.service';
 
 
 @Injectable()
@@ -34,7 +36,7 @@ UpdateOrdenesDto> {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Notification)
-    private readonly notificationRepository: Repository<Notification>,
+    private readonly notificationService: NotificationsService
   ) {
     super(repository)
   }
@@ -74,26 +76,47 @@ UpdateOrdenesDto> {
     solicitud.estado = SolEstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
 
-    // if (result.isSuccess && result.data) {
-    //   const order = result.data as Ordenes;
-    //   const notification = new Notification();
-    //   notification.userOrigin = createDto.tecnico; // UUID del técnico asignado
-    //   notification.destinyType = notifyEnum.USERS;
-    //   notification.destinyUser = [
-    //     { id: createDto.tecnico, isSolititudRead: false, isOrderRead: false, servicioID: solicitud.id, orderID: order.id },
-    //   ];
-    //   if (solicitud.solicitante?.id) {
-    //     notification.destinyUser.push({
-    //       id: solicitud.solicitante.id,
-    //       isSolititudRead: false,
-    //       isOrderRead: false,
-    //       servicioID: solicitud.id,
-    //       orderID: order.id,
-    //     });
-    //   }
-    //   notification.message = `La solicitud ${solicitud.codigo} ha sido asignada. Se ha creado una orden.`;
-    //   await this.notificationRepository.save(notification);
-    // }
+
+    if (result.isSuccess && result.data) {
+      const order = result.data as Ordenes;
+
+      const notificationDto = new CreateNotificationDto();
+      // Añado el solicitante y el tipo de destinatario
+      notificationDto.userOrigin = createDto.userID;
+      notificationDto.destinyType = notifyEnum.USERS;
+      // Adiciono el destino
+      notificationDto.destinyID = createDto.tecnico
+      // obtengo el usuario origen para format el mensaje
+
+      notificationDto.isRead = false
+      // Determino el tipo de notificacion entre solicitud y Orden
+      notificationDto.isOrder = false
+      // Asigno el ID segun el tipo
+      notificationDto.objectID =  order.id
+  
+    notificationDto.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
+    await this.notificationService.create(notificationDto)
+    }
+
+
+    if (result.isSuccess && result.data) {
+      const order = result.data as Ordenes;
+
+      const notificationDto = new CreateNotificationDto();
+      // Añado el solicitante y el tipo de destinatario
+      notificationDto.userOrigin = createDto.userID;
+      notificationDto.destinyType = notifyEnum.USERS;
+      // Adiciono el destino
+      notificationDto.destinyID = createDto.tecnico
+      // obtengo el usuario origen para format el mensaje
+
+      notificationDto.isRead = false
+      // Determino el tipo de notificacion entre solicitud y Orden
+      notificationDto.isOrder = false
+      // Asigno el ID segun el tipo
+    await this.notificationService.create(notificationDto)
+
+    }
 
     return result;
   }

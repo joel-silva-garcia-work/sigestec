@@ -21,6 +21,7 @@ import { ReturnDto } from '../../common/base/dto';
 import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { EstadoEnum } from './enum/estado.enum';
 import { CloseOrdenDto } from './dto/close-orden.dto';
+import { User } from 'src/security/user/entities/user.entity';
 
 @ApiTags('ordenes')
 @Controller('taller/ordenes')
@@ -79,15 +80,17 @@ OrdenesService
     return this.Service.findOneActive(dto);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Post('adicionar')
   @ApiOperation({ summary: 'Crear un nuevo item en ordenes' })
   @ApiResponse({ status: 200, description: 'Item creado exitosamente,returnDto.data={object saved}' })
   @ApiResponse({ status: 400, description: 'Datos inválidos proporcionados' })
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateOrdenesDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserBussines() user: User
   ) {
+    createDto.userID = user.id;
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
     const executedUrl = request.originalUrl;
@@ -229,4 +232,8 @@ OrdenesService
       value: v,
     }));
   }
+}
+
+function GetUserBussines(): (target: OrdenesController, propertyKey: "Add", parameterIndex: 2) => void {
+  throw new Error('Function not implemented.');
 }
