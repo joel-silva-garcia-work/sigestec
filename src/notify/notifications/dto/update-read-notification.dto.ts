@@ -4,11 +4,12 @@ import { IsBoolean, IsEmpty, IsNotEmpty, IsOptional, IsString, IsUUID } from "cl
 export class UpdateStateNotificationDto {
     @ApiProperty()
     @IsOptional()
-    notificationId?: string = ""
+    @IsUUID()
+    notificationId?: string
 
     @ApiProperty()
-    // @IsString()
-    // @IsUUID()
+    @IsString()
+    @IsUUID()
     @IsOptional()
     destinationId?: string
 
