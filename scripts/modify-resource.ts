@@ -202,22 +202,22 @@ ${fieldsContent}
         if (field.decorator.includes('nullable: true')) {
           decorators.push('@IsOptional()');
         } else {
-          decorators.push('@IsNotEmpty({message: DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY.message})');
+          decorators.push('@IsNotEmpty(withDtoContext(DTO_MESSAGES.VALIDATION.FIELD_CANNOT_BE_EMPTY))');
         }
 
         // Agregar validador según el tipo
         switch(field.type) {
           case 'string':
-            decorators.push('@IsString({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING.message})');
+            decorators.push('@IsString(withDtoContext(DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_STRING))');
             break;
           case 'number':
-            decorators.push('@IsNumber({}, {message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_NUMBER.message})');
+            decorators.push('@IsNumber({}, withDtoContext(DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_NUMBER))');
             break;
           case 'boolean':
-            decorators.push('@IsBoolean({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_BOOLEAN.message})');
+            decorators.push('@IsBoolean(withDtoContext(DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_BOOLEAN))');
             break;
           case 'Date':
-            decorators.push('@IsDate({message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_DATE.message})');
+            decorators.push('@IsDate(withDtoContext(DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_DATE))');
             break;
         }
 
@@ -229,7 +229,7 @@ ${fieldsContent}
     const dtoContent = `import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsDate, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { BaseExtendedDto } from './../../../common/base/dto/base.dto';
-import { DTO_MESSAGES } from './../../../common/resource/dto.messages';
+import { DTO_MESSAGES, withDtoContext } from './../../../common/resource/dto.messages';
 
 export class Create${className}Dto extends BaseExtendedDto {
 ${dtoFieldsContent}

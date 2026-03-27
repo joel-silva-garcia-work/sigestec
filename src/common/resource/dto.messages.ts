@@ -32,3 +32,27 @@ export const DTO_MESSAGES = {
 
 export type DtoMessageKey = 
   | keyof typeof DTO_MESSAGES.VALIDATION
+
+type DtoMessageLike = { message: string };
+
+export type DtoMessageContextOptions = {
+  includeDtoName?: boolean;
+  prefix?: string;
+};
+
+export function withDtoContext(
+  base: DtoMessageLike,
+  options: DtoMessageContextOptions = {},
+): { message: (args: { property?: string; targetName?: string }) => string } {
+  const { includeDtoName = false, prefix = 'campo' } = options;
+
+  return {
+    message: (args) => {
+      const property = args?.property ?? '';
+      const targetName = args?.targetName ?? '';
+      const dtoPart = includeDtoName && targetName ? ` DTO: ${targetName}` : '';
+      const propPart = property ? `${prefix}: ${property}` : prefix;
+      return `${base.message} ${propPart}${dtoPart}`;
+    },
+  };
+}
