@@ -203,22 +203,22 @@ UpdateOrdenesDto> {
       where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
-  jefesTaller.forEach(async(jefe) => {
-    const notificationDto = new CreateNotificationDto();
-    // Añado el solicitante y el tipo de destinatario
-    notificationDto.userOrigin = dto.userID;
-    notificationDto.destinyType = notifyEnum.USERS;
-    // Adiciono el destino
-    notificationDto.destinyID = jefe.id
-    // obtengo el usuario origen para format el mensaje
+  // jefesTaller.forEach(async(jefe) => {
+  //   const notificationDto = new CreateNotificationDto();
+  //   // Añado el solicitante y el tipo de destinatario
+  //   notificationDto.userOrigin = dto.userID;
+  //   notificationDto.destinyType = notifyEnum.USERS;
+  //   // Adiciono el destino
+  //   notificationDto.destinyID = jefe.id
+  //   // obtengo el usuario origen para format el mensaje
 
-    notificationDto.isRead = false
-    // Determino el tipo de notificacion entre solicitud y Orden
-    notificationDto.isOrder = true
+  //   notificationDto.isRead = false
+  //   // Determino el tipo de notificacion entre solicitud y Orden
+  //   notificationDto.isOrder = true
 
-  notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-  await this.notificationService.create(notificationDto)
-    });
+  // notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+  // await this.notificationService.create(notificationDto)
+  //   });
     if (order.tecnico?.id) {
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
@@ -236,20 +236,20 @@ UpdateOrdenesDto> {
     await this.notificationService.create(notificationDto)
     }
     if (order.solicitud.solicitante?.id) {
-      const notificationDto = new CreateNotificationDto();
+      const notificationDto2 = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
-      notificationDto.userOrigin = dto.userID;
-      notificationDto.destinyType = notifyEnum.USERS;
+      notificationDto2.userOrigin = dto.userID;
+      notificationDto2.destinyType = notifyEnum.USERS;
       // Adiciono el destino
-      notificationDto.destinyID = order.solicitud.solicitante.id
+      notificationDto2.destinyID = order.solicitud.solicitante.id
       // obtengo el usuario origen para format el mensaje
   
-      notificationDto.isRead = false
+      notificationDto2.isRead = false
       // Determino el tipo de notificacion entre solicitud y Orden
-      notificationDto.isOrder = true
+      notificationDto2.isOrder = true
   
-    notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    await this.notificationService.create(notificationDto)
+    notificationDto2.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    await this.notificationService.create(notificationDto2)
     }
     return {
       isSuccess: true,
