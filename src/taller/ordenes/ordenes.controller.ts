@@ -22,6 +22,7 @@ import { UpdateStateOrdenesDto } from './dto/updatestate-ordenes.dto';
 import { EstadoEnum } from './enum/estado.enum';
 import { CloseOrdenDto } from './dto/close-orden.dto';
 import { User } from 'src/security/user/entities/user.entity';
+import { GetUser, GetUserManager, GetUserAdmin } from 'src/security/auth/decorator';
 
 @ApiTags('ordenes')
 @Controller('taller/ordenes')
@@ -34,20 +35,21 @@ OrdenesService
     super(Service);
   }
 
-     @Get('todos')
+  @UseGuards(JwtGuard)
+  @Get('todos')
     override async findItems() {
       return super.findItems();
     }
   
-  // @UseGuards(RouteAccessGuard)
+  @UseGuards(RouteAccessGuard)
   @Get(['ver-todos-activos-secure', 'ver-todos-activos-public'])
     override async findActiveItems(
-    // @GetUserAdmin() user: User
+    @GetUser() user: User
     ) {
       return super.findActiveItems();
     }
 
-  // @UseGuards(RouteAccessGuard)
+  @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-secure', 'ver-uno-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -59,12 +61,13 @@ OrdenesService
     description: 'Error de validación o datos incorrectos.',
   })
   @ApiBody({ type: IdDto, description: 'ID del elemento a buscar.' })
-  override async findOne(@Body(new ValidationPipe({ transform: true })) dto: IdDto, securityParam?: any): Promise<ReturnDto> {
+  override async findOne(@Body(new ValidationPipe({ transform: true })) dto: IdDto, 
+  @GetUser() user: User): Promise<ReturnDto> {
     return this.Service.findOne(dto);
   }
   
   
-  // @UseGuards(RouteAccessGuard)
+  @UseGuards(RouteAccessGuard)
   @Get(['ver-uno-activo-secure', 'ver-uno-activo-public'])  
   @ApiOperation({ summary: 'Obtener un item por ID' })
   @ApiResponse({
@@ -76,7 +79,8 @@ OrdenesService
     description: 'Error de validación o datos incorrectos.',
   })
   @ApiBody({ type: IdDto, description: 'ID del elemento a buscar.' })
-  override async findOneActive(@Body(new ValidationPipe({ transform: true })) dto: IdDto, securityParam?: any): Promise<ReturnDto> {
+  override async findOneActive(@Body(new ValidationPipe({ transform: true })) dto: IdDto, 
+  @GetUser() user: User): Promise<ReturnDto> {
     return this.Service.findOneActive(dto);
   }
 
@@ -88,7 +92,7 @@ OrdenesService
   async Add(
     @Body(new ValidationPipe({ transform: true })) createDto: CreateOrdenesDto,
     @Req() request: Request,
-    @GetUserBussines() user: User
+    @GetUserManager() user: User
   ) {
     createDto.userID = user.id;
     const clientIp = request.socket.remoteAddress;
@@ -102,14 +106,14 @@ OrdenesService
     return await this.Service.Add(createDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('actualizar')
   @ApiOperation({ summary: 'Actualizar un item existente en ordenes' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async Edit(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateOrdenesDto,
-    @Req() request: Request
+    @Req() request: Request,
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -122,13 +126,14 @@ OrdenesService
     return await this.Service.Edit(updateDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Put('cambiar-estado')
   @ApiOperation({ summary: 'Activar/Desactivar un item de ordenes' })
   @ApiResponse({ status: 200, description: 'Item activado/desactivado exitosamente,returnDto.data={object active/inactive}  '})
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async State(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
+  @Req() request: Request,
+  @GetUserManager() user: User
   ) {
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
@@ -232,8 +237,4 @@ OrdenesService
       value: v,
     }));
   }
-}
-
-function GetUserBussines(): (target: OrdenesController, propertyKey: "Add", parameterIndex: 2) => void {
-  throw new Error('Function not implemented.');
 }
