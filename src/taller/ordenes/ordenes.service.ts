@@ -68,14 +68,13 @@ UpdateOrdenesDto> {
         return returnDto
       }
     const result = await super.create(createDto);
-    if (result.isSuccess) {
+    if (result.isSuccess) 
+      {
       this.trazaRepository.save(traza);
 
     solicitud.estado = SolEstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
 
-
-    if (result.isSuccess && result.data) {
       const order = result.data as Ordenes;
 
       const notificationDto = new CreateNotificationDto();
@@ -103,8 +102,7 @@ UpdateOrdenesDto> {
     }
 
     return result
-  
-  }
+
 }
 
   
