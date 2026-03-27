@@ -53,7 +53,8 @@ export class NotificationsService extends BaseServiceCRUD<
 
   async ReadNotification(dto: UpdateStateNotificationDto): Promise<ReturnDto> {
     const returnDto = new ReturnDto();
-
+    console.log("Entro en el leer uno")
+    console.log(dto)
     const notification = await this.repository.findOne({
       where:{id: dto.notificationId} 
     });
