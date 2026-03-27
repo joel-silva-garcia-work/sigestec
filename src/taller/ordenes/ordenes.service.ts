@@ -74,8 +74,9 @@ UpdateOrdenesDto> {
 
     solicitud.estado = SolEstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
-
-      const order = result.data as Ordenes;
+      const order = await this.repository.findOne({
+        where: { solicitud: { id: solicitud.id } },
+      });
 
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
