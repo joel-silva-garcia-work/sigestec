@@ -35,8 +35,8 @@ UpdateOrdenesDto> {
     private readonly solicitudesRepository: Repository<Solicitudes>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Notification)
     private readonly notificationService: NotificationsService
+
   ) {
     super(repository)
   }
@@ -57,7 +57,6 @@ UpdateOrdenesDto> {
   async Add(createDto: CreateOrdenesDto, traza: CreateTrazaDto) {
     const solicitud = await this.solicitudesRepository.findOne({
       where: { id: createDto.solicitud },
-      relations: ['solicitante'],
     })
     if(solicitud.estado != SolEstadoEnum.SOLICITADA)
       {
@@ -75,9 +74,9 @@ UpdateOrdenesDto> {
     solicitud.estado = SolEstadoEnum.ASIGNADA;
     await this.solicitudesRepository.save(solicitud);
       const order = await this.repository.findOne({
-        where: { solicitud: { id: solicitud.id } },
+        where: { solicitud: { id: createDto.solicitud} }
       });
-
+      console.log(order)
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
       notificationDto.userOrigin = createDto.userID;
