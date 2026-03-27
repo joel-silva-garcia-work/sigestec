@@ -1,12 +1,8 @@
-import { IsNotEmpty, IsString, IsNumber, IsBoolean, IsDate, IsOptional, IsUUID, IsEnum } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
-import { BaseExtendedDto } from 'src/common/base/dto/base.dto';
+import { IsNotEmpty, IsEnum } from 'class-validator';
 import { DTO_MESSAGES } from 'src/common/resource/dto.messages';
-import { BasicEntity } from 'src/common/base/entities';
 import { IdDto } from 'src/common/base/dto/id.dto';
 import { EstadoEnum } from '../enum/estado.enum';
 import { SolEstadoEnum } from 'src/taller/solicitudes/enum/estado.enum';
-// import { SolEstadoEnum } from '../../solicitudes/enum/estado.enum';
 
 export class UpdateStateOrdenesDto extends IdDto {
 
@@ -14,7 +10,7 @@ export class UpdateStateOrdenesDto extends IdDto {
   @IsEnum(EstadoEnum, {message: DTO_MESSAGES.VALIDATION.FIELD_MUST_BE_ENUM.message})
   newOrderState: EstadoEnum; 
 
-
+  userID?: string;
   newRequestState?: SolEstadoEnum
 
 }

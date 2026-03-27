@@ -165,15 +165,17 @@ OrdenesService
   }
 
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Patch('cambiar-estado-ordenes-y-solicitudes')
   @ApiOperation({ summary: 'Actualizar un item existente en ordenes' })
   @ApiResponse({ status: 200, description: 'Item actualizado exitosamente,returnDto.data={object updated} ' })
   @ApiResponse({ status: 400, description: 'Item no encontrado' })
   async UpdateStateOrderAndRequest(
     @Body(new ValidationPipe({ transform: true })) updateDto: UpdateStateOrdenesDto,
-    @Req() request: Request
+    @Req() request: Request,
+    @GetUserManager() user: User
   ) {
+    updateDto.userID = user.id;
     const clientIp = request.socket.remoteAddress;
     const ipv4 = clientIp?.replace('::ffff:', '');
     const executedUrl = request.originalUrl;

@@ -91,8 +91,7 @@ UpdateSolicitudesDto> {
       notificationDto.isRead = false
       // Determino el tipo de notificacion entre solicitud y Orden
       notificationDto.isOrder = false
-      // Asigno el ID segun el tipo
-      notificationDto.objectID = (result.data as Solicitudes).id
+
       await this.notificationService.create(notificationDto)
     })
 
@@ -171,8 +170,7 @@ UpdateSolicitudesDto> {
     notificationDto.isRead = false
     // Determino el tipo de notificacion entre solicitud y Orden
     notificationDto.isOrder = false
-    // Asigno el ID segun el tipo
-    notificationDto.objectID = solicitud.id
+
     await this.notificationService.create(notificationDto)
 
     }
@@ -229,7 +227,6 @@ UpdateSolicitudesDto> {
       notificationDto.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
       notificationDto.isRead = false;
       notificationDto.isOrder = false;
-      notificationDto.objectID = solicitud.id;
       await this.notificationService.create(notificationDto);
     }
 
@@ -494,8 +491,6 @@ UpdateSolicitudesDto> {
       notificationDto.isRead = false
       // Determino el tipo de notificacion entre solicitud y Orden
       notificationDto.isOrder = false
-      // Asigno el ID segun el tipo
-      notificationDto.objectID =  request.id
   
     notificationDto.message = `La solicitud ${request.codigo} ha pasado a estado ${SolEstadoEnum.RECHAZADA}`;
     await this.notificationService.create(notificationDto)

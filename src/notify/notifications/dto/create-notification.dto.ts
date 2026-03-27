@@ -21,11 +21,7 @@ export class CreateNotificationDto {
     @IsNotEmpty()
     isOrder: boolean  
 
-    @ApiProperty({ type:String })
-    @IsString()
-    @IsUUID()
-    @IsNotEmpty()
-    objectID: string  
+
 
     @ApiProperty({})
     @IsEnum(notifyEnum)

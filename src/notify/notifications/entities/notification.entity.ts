@@ -26,10 +26,6 @@ export class Notification extends BasicEntity {
     })
     isOrder: boolean  
 
-    @Column({
-        type: "varchar",nullable:true
-    })
-    objectID: string  
 
     @Column({
         type: "varchar"
