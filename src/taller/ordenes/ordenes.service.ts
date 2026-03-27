@@ -94,12 +94,12 @@ UpdateOrdenesDto> {
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
     await this.notificationService.create(notificationDto)
 
-    // // Adiciono el destino
-    // notificationDto.destinyID = order.solicitud.solicitante.id
-    // // Determino el tipo de notificacion entre solicitud y Orden
-    // notificationDto.isOrder = true
+    // Adiciono el destino
+    notificationDto.destinyID = order.solicitud.solicitante.id
+    // Determino el tipo de notificacion entre solicitud y Orden
+    notificationDto.isOrder = true
   
-    // await this.notificationService.create(notificationDto)
+    await this.notificationService.create(notificationDto)
     }
 
     return result
@@ -139,7 +139,7 @@ UpdateOrdenesDto> {
     // Obtener la orden (tecnico es eager; solicitud también)
     const order = await this.repository.findOne({
       where: { id: dto.id },
-      relations: ['solicitud', 'solicitud.solicitante'],
+      // relations: ['solicitud', 'solicitud.solicitante'],
     });
 
     if (!order) {
@@ -318,11 +318,11 @@ UpdateOrdenesDto> {
     // await this.trazaRepository.save(traza);
     // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
 
-    // const jefesTaller = await this.userRepository.find({
-    //   where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
-    // });
+    const jefesTaller = await this.userRepository.find({
+      where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
+    });
 
-    // const destinyUser = jefesTaller.map((user) => ({
+    // jefesTaller.foreach(asy(user) => ({
     //   id: user.id,
     //   isSolititudRead: false,
     //   isOrderRead: false,
