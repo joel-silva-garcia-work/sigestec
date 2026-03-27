@@ -92,12 +92,12 @@ UpdateOrdenesDto> {
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
     await this.notificationService.create(notificationDto)
 
-    // Adiciono el destino
-    notificationDto.destinyID = solicitud.solicitante.id
-    // Determino el tipo de notificacion entre solicitud y Orden
-    notificationDto.isOrder = true
+    // // Adiciono el destino
+    // notificationDto.destinyID = solicitud.solicitante.id
+    // // Determino el tipo de notificacion entre solicitud y Orden
+    // notificationDto.isOrder = true
   
-    await this.notificationService.create(notificationDto)
+    // await this.notificationService.create(notificationDto)
     }
 
     return result
