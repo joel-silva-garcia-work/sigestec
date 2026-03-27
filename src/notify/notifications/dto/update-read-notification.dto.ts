@@ -13,11 +13,4 @@ export class UpdateStateNotificationDto {
     @IsOptional()
     destinationId?: string
 
-
-    isRead: boolean = true
-
-
-
-    
-
 }
