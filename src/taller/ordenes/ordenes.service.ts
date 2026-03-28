@@ -190,7 +190,7 @@ UpdateOrdenesDto> {
     await this.repository.save(order);
     
     // Cambiar estado de la solicitud asociada
-    const solicitud = order.solicitud
+    const solicitud = order.solicitud as Solicitudes;
     solicitud.estado = dto.newRequestState;
     await this.solicitudesRepository.save(solicitud);
     
@@ -219,7 +219,7 @@ UpdateOrdenesDto> {
   // notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
   // await this.notificationService.create(notificationDto)
   //   });
-    if (order.tecnico?.id) {
+    if (order.tecnico) {
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
       notificationDto.userOrigin = dto.userID;
@@ -235,13 +235,13 @@ UpdateOrdenesDto> {
     notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
     await this.notificationService.create(notificationDto)
     }
-    if (order.solicitud.solicitante?.id) {
+    if (solicitud.solicitante) {
       const notificationDto2 = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
       notificationDto2.userOrigin = dto.userID;
       notificationDto2.destinyType = notifyEnum.USERS;
       // Adiciono el destino
-      notificationDto2.destinyID = order.solicitud.solicitante.id
+      notificationDto2.destinyID = solicitud.solicitante.id
       // obtengo el usuario origen para format el mensaje
   
       notificationDto2.isRead = false
