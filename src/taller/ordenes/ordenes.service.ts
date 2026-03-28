@@ -219,22 +219,7 @@ UpdateOrdenesDto> {
   notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
   await this.notificationService.create(notificationDto)
   //   });
-    if (order.tecnico) {
-      const notificationDto = new CreateNotificationDto();
-      // Añado el solicitante y el tipo de destinatario
-      notificationDto.userOrigin = dto.userID;
-      notificationDto.destinyType = notifyEnum.USERS;
-      // Adiciono el destino
-      notificationDto.destinyID = order.tecnico.id
-      // obtengo el usuario origen para format el mensaje
-  
-      notificationDto.isRead = false
-      // Determino el tipo de notificacion entre solicitud y Orden
-      notificationDto.isOrder = true
-  
-    notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    await this.notificationService.create(notificationDto)
-    }
+
     if (solicitud.solicitante) {
       const notificationDto2 = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
