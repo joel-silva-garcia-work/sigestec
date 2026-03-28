@@ -239,4 +239,8 @@ OrdenesService
       value: v,
     }));
   }
+
+  async GetAllTechnician() {
+    return await this.Service.GetAllTechnician();
+  }
 }

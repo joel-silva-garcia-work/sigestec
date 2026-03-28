@@ -203,7 +203,6 @@ UpdateOrdenesDto> {
       where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
-  // jefesTaller.forEach(async(jefe) => {
     const notificationDto = new CreateNotificationDto();
     // Añado el solicitante y el tipo de destinatario
     notificationDto.userOrigin = dto.userID;
@@ -218,7 +217,6 @@ UpdateOrdenesDto> {
 
   notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
   await this.notificationService.create(notificationDto)
-  //   });
 
     if (solicitud.solicitante) {
       const notificationDto2 = new CreateNotificationDto();
@@ -250,7 +248,6 @@ UpdateOrdenesDto> {
     // Obtener la orden (tecnico es eager; solicitud también)
     const order = await this.repository.findOne({
       where: { id: dto.id },
-      relations: ['solicitud', 'solicitud.solicitante'],
     });
 
     if (!order) {
@@ -408,6 +405,17 @@ UpdateOrdenesDto> {
       }
     });
     returnDto.data = orders;
+    returnDto.isSuccess = true;
+    return returnDto;
+  }
+  async GetAllTechnician() {
+    const returnDto = new ReturnDto();
+    const users = await this.userRepository.find({
+      where: {
+        rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' }
+      }
+    });
+    returnDto.data = users;
     returnDto.isSuccess = true;
     return returnDto;
   }
