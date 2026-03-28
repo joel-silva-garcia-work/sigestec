@@ -240,7 +240,11 @@ OrdenesService
     }));
   }
 
-  async GetAllTechnician() {
+  @UseGuards(JwtGuard)
+  @Get('tecnicos')
+  @ApiOperation({ summary: 'Obtener todos los técnicos' })
+  @ApiResponse({ status: 200, description: 'Lista de técnicos' })
+  async GetAllTechnician(@GetUser() user: User) {
     return await this.Service.GetAllTechnician();
   }
 }
