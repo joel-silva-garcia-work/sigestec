@@ -412,7 +412,7 @@ UpdateOrdenesDto> {
     const returnDto = new ReturnDto();
     const users = await this.userRepository.find({
       where: {
-        rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' }
+        rol: { id: '86e1985c-576c-4129-b81c-c88270fe9c42' }
       }
     });
     returnDto.data = users;
