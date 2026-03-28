@@ -199,25 +199,25 @@ UpdateOrdenesDto> {
     // await this.trazaRepository.save(traza);
     // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
 
-    const jefesTaller = await this.userRepository.find({
+    const jefe = await this.userRepository.findOne({
       where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
   // jefesTaller.forEach(async(jefe) => {
-  //   const notificationDto = new CreateNotificationDto();
-  //   // Añado el solicitante y el tipo de destinatario
-  //   notificationDto.userOrigin = dto.userID;
-  //   notificationDto.destinyType = notifyEnum.USERS;
-  //   // Adiciono el destino
-  //   notificationDto.destinyID = jefe.id
-  //   // obtengo el usuario origen para format el mensaje
+    const notificationDto = new CreateNotificationDto();
+    // Añado el solicitante y el tipo de destinatario
+    notificationDto.userOrigin = dto.userID;
+    notificationDto.destinyType = notifyEnum.USERS;
+    // Adiciono el destino
+    notificationDto.destinyID = jefe.id
+    // obtengo el usuario origen para format el mensaje
 
-  //   notificationDto.isRead = false
-  //   // Determino el tipo de notificacion entre solicitud y Orden
-  //   notificationDto.isOrder = true
+    notificationDto.isRead = false
+    // Determino el tipo de notificacion entre solicitud y Orden
+    notificationDto.isOrder = true
 
-  // notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-  // await this.notificationService.create(notificationDto)
+  notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+  await this.notificationService.create(notificationDto)
   //   });
     if (order.tecnico) {
       const notificationDto = new CreateNotificationDto();
