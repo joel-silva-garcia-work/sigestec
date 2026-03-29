@@ -186,13 +186,14 @@ OrdenesService
     return await this.Service.ChangeOrderAndRequestState(updateDto, traza);
   }
 
-  // @UseGuards(JwtGuard)
+  @UseGuards(JwtGuard)
   @Get('obtener-ordenes-tecnico')
   @ApiOperation({ summary: 'Obtener las solicitudes de un usuario' })
   @ApiResponse({ status: 200, description: 'Solicitudes obtenidas exitosamente,returnDto.data={array of objects}  '})
   @ApiResponse({ status: 400, description: 'Usuario no encontrado' })
   async GetRequests(@Body(new ValidationPipe({ transform: true })) dto: IdDto,
-  @Req() request: Request
+  @Req() request: Request,
+  @GetUserManager() user: User
   ) {
     return await this.Service.GetOrdersByTechnician(dto);
   }
