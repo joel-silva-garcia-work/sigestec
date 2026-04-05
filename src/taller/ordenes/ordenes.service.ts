@@ -15,7 +15,6 @@ import { ReturnDto } from '../../common/base/dto';
 import { CodeEnum } from '../../common/enum/code.enum';
 import { notifyEnum } from '../../common/enum/notify.enum';
 import { User } from '../../security/user/entities/user.entity';
-import { Notification } from '../../notify/notifications/entities/notification.entity';
 import { CloseOrdenDto } from './dto/close-orden.dto';
 import { CreateNotificationDto } from 'src/notify/notifications/dto/create-notification.dto';
 import { NotificationsService } from 'src/notify/notifications/notifications.service';
@@ -39,6 +38,29 @@ UpdateOrdenesDto> {
 
   ) {
     super(repository)
+  }
+
+  /** Construye un `CreateNotificationDto` para notificaciones de orden (destino usuario concreto). */
+  private buildOrderNotificationDto(params: {
+    userOrigin: string;
+    destinyID: string;
+    message: string;
+    destinyType?: notifyEnum;
+    isOrder?: boolean;
+  }): CreateNotificationDto {
+    const dto = new CreateNotificationDto();
+    dto.userOrigin = params.userOrigin;
+    dto.destinyID = params.destinyID;
+    dto.destinyType = params.destinyType ?? notifyEnum.USERS;
+    dto.isOrder = params.isOrder ?? true;
+    // dto.isRead = false;
+    dto.message = params.message;
+    return dto;
+  }
+
+  /** Construye y persiste una notificación a partir del DTO (delega en NotificationsService). */
+  private async sendAndSaveNotification(dto: CreateNotificationDto) {
+    return this.notificationService.create(dto);
   }
 
   override async findAllItems() {
@@ -76,34 +98,21 @@ UpdateOrdenesDto> {
       const order = await this.repository.findOne({
         where: { solicitud: { id: createDto.solicitud} }
       });
-      const notificationDto = new CreateNotificationDto();
-      // Añado el solicitante y el tipo de destinatario
-      notificationDto.userOrigin = createDto.userID;
-      notificationDto.destinyType = notifyEnum.USERS;
-      // Adiciono el destino
-      notificationDto.destinyID = order.tecnico.id
-      // obtengo el usuario origen para format el mensaje
-
-      notificationDto.isRead = false
-      // Determino el tipo de notificacion entre solicitud y Orden
-      notificationDto.isOrder = true
-
-  
-    notificationDto.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
-    await this.notificationService.create(notificationDto)
-
-    // Notification 2
-    const notificationDto2 = new CreateNotificationDto();
-    // Añado el solicitante y el tipo de destinatario
-    notificationDto2.userOrigin = createDto.userID;
-    notificationDto2.destinyType = notifyEnum.USERS;
-    // Adiciono el destino
-    notificationDto2.destinyID = solicitud.solicitante.id
-    // Determino el tipo de notificacion entre solicitud y Orden
-    notificationDto2.isRead = false
-    notificationDto2.isOrder = true
-    notificationDto2.message = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
-    await this.notificationService.create(notificationDto2)
+      const msgAsignada = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
+      await this.sendAndSaveNotification(
+        this.buildOrderNotificationDto({
+          userOrigin: createDto.userID,
+          destinyID: order.tecnico.id,
+          message: msgAsignada,
+        }),
+      );
+      await this.sendAndSaveNotification(
+        this.buildOrderNotificationDto({
+          userOrigin: createDto.userID,
+          destinyID: solicitud.solicitante.id,
+          message: msgAsignada,
+        }),
+      );
   
     }
 
@@ -203,36 +212,24 @@ UpdateOrdenesDto> {
       where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
-    const notificationDto = new CreateNotificationDto();
-    // Añado el solicitante y el tipo de destinatario
-    notificationDto.userOrigin = dto.userID;
-    notificationDto.destinyType = notifyEnum.USERS;
-    // Adiciono el destino
-    notificationDto.destinyID = jefe.id
-    // obtengo el usuario origen para format el mensaje
-
-    notificationDto.isRead = false
-    // Determino el tipo de notificacion entre solicitud y Orden
-    notificationDto.isOrder = true
-
-  notificationDto.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-  await this.notificationService.create(notificationDto)
-
+    const msgCambioEstado = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    if (jefe) {
+      await this.sendAndSaveNotification(
+        this.buildOrderNotificationDto({
+          userOrigin: dto.userID,
+          destinyID: jefe.id,
+          message: msgCambioEstado,
+        }),
+      );
+    }
     if (solicitud.solicitante) {
-      const notificationDto2 = new CreateNotificationDto();
-      // Añado el solicitante y el tipo de destinatario
-      notificationDto2.userOrigin = dto.userID;
-      notificationDto2.destinyType = notifyEnum.USERS;
-      // Adiciono el destino
-      notificationDto2.destinyID = solicitud.solicitante.id
-      // obtengo el usuario origen para format el mensaje
-  
-      notificationDto2.isRead = false
-      // Determino el tipo de notificacion entre solicitud y Orden
-      notificationDto2.isOrder = true
-  
-    notificationDto2.message = `La orden ${order.solicitud.codigo} ha sido cambiado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    await this.notificationService.create(notificationDto2)
+      await this.sendAndSaveNotification(
+        this.buildOrderNotificationDto({
+          userOrigin: dto.userID,
+          destinyID: solicitud.solicitante.id,
+          message: msgCambioEstado,
+        }),
+      );
     }
     return {
       isSuccess: true,
@@ -302,45 +299,35 @@ UpdateOrdenesDto> {
 
     // Guardar traza
     // await this.trazaRepository.save(traza);
-    // Enviar notificaciones a jefes de taller, técnico (UUID) y solicitante
 
     const jefesTaller = await this.userRepository.find({
       where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
-    // jefesTaller.foreach(asy(user) => ({
-    //   id: user.id,
-    //   isSolititudRead: false,
-    //   isOrderRead: false,
-    //   servicioID: order.solicitud.id,
-    //   orderID: order.id,
-    // }));
-    // if (order.tecnico?.id) {
-    //   destinyUser.push({
-    //     id: order.tecnico.id,
-    //     isSolititudRead: false,
-    //     isOrderRead: false,
-    //     servicioID: order.solicitud.id,
-    //     orderID: order.id,
-    //   });
-    // }
-    // if (order.solicitud.solicitante?.id) {
-    //   destinyUser.push({
-    //     id: order.solicitud.solicitante.id,
-    //     isSolititudRead: false,
-    //     isOrderRead: false,
-    //     servicioID: order.solicitud.id,
-    //     orderID: order.id,
-    //   });
-    // }
+    const msgCierre = `La orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
+    const userOriginClose =
+      order.tecnico?.id ?? solicitud.solicitante?.id ?? jefesTaller[0]?.id ?? '';
 
-    // const notification = new Notification();
-    // notification.userOrigin = order.tecnico?.id ?? ''; // UUID del técnico que cambió el estado
-    // notification.destinyType = notifyEnum.USERS;
-    // notification.destinyUser = destinyUser;
-    // notification.message = `La Orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    // await this.notificationRepository.save(notification);
-
+    if (userOriginClose) {
+      for (const jefe of jefesTaller) {
+        await this.sendAndSaveNotification(
+          this.buildOrderNotificationDto({
+            userOrigin: userOriginClose,
+            destinyID: jefe.id,
+            message: msgCierre,
+          }),
+        );
+      }
+      if (solicitud.solicitante?.id) {
+        await this.sendAndSaveNotification(
+          this.buildOrderNotificationDto({
+            userOrigin: userOriginClose,
+            destinyID: solicitud.solicitante.id,
+            message: msgCierre,
+          }),
+        );
+      }
+    }
 
     return {
       isSuccess: true,
