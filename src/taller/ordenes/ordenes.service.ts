@@ -307,7 +307,7 @@ UpdateOrdenesDto> {
     const msgCierre = `La orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
     const userOriginClose =
       order.tecnico?.id ?? solicitud.solicitante?.id ?? jefesTaller[0]?.id ?? '';
-
+console.log(userOriginClose)
     if (userOriginClose) {
       for (const jefe of jefesTaller) {
         await this.sendAndSaveNotification(
@@ -328,7 +328,11 @@ UpdateOrdenesDto> {
         );
       }
     }
-
+    console.log(this.buildOrderNotificationDto({
+      userOrigin: userOriginClose,
+      destinyID: solicitud.solicitante.id,
+      message: msgCierre,
+    }),)
     return {
       isSuccess: true,
       message: 'Estados actualizados correctamente',
