@@ -305,9 +305,7 @@ UpdateOrdenesDto> {
     });
 
     const msgCierre = `La orden de la solicitud ${solicitud.codigo} ha pasado a estado ${dto.newOrderState} y la solicitud a estado ${dto.newRequestState}`;
-    const userOriginClose =
-      order.tecnico?.id ?? solicitud.solicitante?.id ?? jefesTaller[0]?.id ?? '';
-console.log(userOriginClose)
+    const userOriginClose = "Técnico ejecutor"
     if (userOriginClose) {
       for (const jefe of jefesTaller) {
         await this.sendAndSaveNotification(
@@ -315,6 +313,8 @@ console.log(userOriginClose)
             userOrigin: userOriginClose,
             destinyID: jefe.id,
             message: msgCierre,
+            destinyType: notifyEnum.TEXT,
+            isOrder:true
           }),
         );
       }
@@ -324,6 +324,7 @@ console.log(userOriginClose)
             userOrigin: userOriginClose,
             destinyID: solicitud.solicitante.id,
             message: msgCierre,
+            destinyType: notifyEnum.TEXT,
           }),
         );
       }
