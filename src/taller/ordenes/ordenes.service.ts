@@ -42,14 +42,14 @@ UpdateOrdenesDto> {
 
   /** Construye un `CreateNotificationDto` para notificaciones de orden (destino usuario concreto). */
   private buildOrderNotificationDto(params: {
-    userOrigin: string;
+    // userOrigin: string;
     destinyID: string;
     message: string;
     destinyType?: notifyEnum;
     isOrder?: boolean;
   }): CreateNotificationDto {
     const dto = new CreateNotificationDto();
-    dto.userOrigin = params.userOrigin;
+    // dto.userOrigin = params.userOrigin;
     dto.destinyID = params.destinyID;
     dto.destinyType = params.destinyType ?? notifyEnum.USERS;
     dto.isOrder = params.isOrder ?? true;
@@ -101,14 +101,14 @@ UpdateOrdenesDto> {
       const msgAsignada = `La orden ${order.solicitud.codigo} ha sido asignada a ${order.tecnico.name}. Se ha creado una orden.`;
       await this.sendAndSaveNotification(
         this.buildOrderNotificationDto({
-          userOrigin: createDto.userID,
+          // userOrigin: createDto.userID,
           destinyID: order.tecnico.id,
           message: msgAsignada,
         }),
       );
       await this.sendAndSaveNotification(
         this.buildOrderNotificationDto({
-          userOrigin: createDto.userID,
+          // userOrigin: createDto.userID,
           destinyID: solicitud.solicitante.id,
           message: msgAsignada,
         }),
@@ -216,7 +216,7 @@ UpdateOrdenesDto> {
     if (jefe) {
       await this.sendAndSaveNotification(
         this.buildOrderNotificationDto({
-          userOrigin: dto.userID,
+          // userOrigin: dto.userID,
           destinyID: jefe.id,
           message: msgCambioEstado,
         }),
@@ -225,7 +225,7 @@ UpdateOrdenesDto> {
     if (solicitud.solicitante) {
       await this.sendAndSaveNotification(
         this.buildOrderNotificationDto({
-          userOrigin: dto.userID,
+          // userOrigin: dto.userID,
           destinyID: solicitud.solicitante.id,
           message: msgCambioEstado,
         }),
@@ -310,7 +310,7 @@ UpdateOrdenesDto> {
       for (const jefe of jefesTaller) {
         await this.sendAndSaveNotification(
           this.buildOrderNotificationDto({
-            userOrigin: userOriginClose,
+            // userOrigin: userOriginClose,
             destinyID: jefe.id,
             message: msgCierre,
             destinyType: notifyEnum.TEXT,
@@ -321,7 +321,7 @@ UpdateOrdenesDto> {
       if (solicitud.solicitante?.id) {
         await this.sendAndSaveNotification(
           this.buildOrderNotificationDto({
-            userOrigin: userOriginClose,
+            // userOrigin: userOriginClose,
             destinyID: solicitud.solicitante.id,
             message: msgCierre,
             destinyType: notifyEnum.TEXT,
@@ -330,7 +330,7 @@ UpdateOrdenesDto> {
       }
     }
     console.log(this.buildOrderNotificationDto({
-      userOrigin: userOriginClose,
+      // userOrigin: userOriginClose,
       destinyID: solicitud.solicitante.id,
       message: msgCierre,
     }),)

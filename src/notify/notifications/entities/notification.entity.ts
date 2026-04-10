@@ -7,8 +7,8 @@ export class Notification extends BasicEntity {
 
 
     // @ManyToOne(() => User, { eager: false })
-    @Column()
-    userOrigin: string;
+    // @Column()
+    // userOrigin: string;
 
     @Column({
         enum:notifyEnum,

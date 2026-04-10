@@ -76,7 +76,7 @@ UpdateSolicitudesDto> {
     users.forEach(async(destinartary) =>{
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
-      notificationDto.userOrigin = createDto.solicitante;
+      // notificationDto.userOrigin = createDto.solicitante;
       notificationDto.destinyType = notifyEnum.USERS;
       // Adiciono el destino
       notificationDto.destinyID = destinartary.id
@@ -155,7 +155,7 @@ UpdateSolicitudesDto> {
     if (order?.tecnico?.id) {
     const notificationDto = new CreateNotificationDto();
 
-    notificationDto.userOrigin = solicitud.solicitante.id;
+    // notificationDto.userOrigin = solicitud.solicitante.id;
     notificationDto.destinyType = notifyEnum.USERS;
     // Adiciono el destino
     notificationDto.destinyID = order?.tecnico?.id
@@ -221,7 +221,7 @@ UpdateSolicitudesDto> {
     if (solicitud.solicitante?.id) {
       const notificationDto = new CreateNotificationDto();
       // cambiar por usuario autenticado
-      notificationDto.userOrigin = idUser;
+      // notificationDto.userOrigin = idUser;
       notificationDto.destinyType = notifyEnum.USERS;
       notificationDto.destinyID = solicitud.solicitante.id;
       notificationDto.message = `Su solicitud ${solicitud.codigo} ha sido rechazada.`;
@@ -482,7 +482,7 @@ UpdateSolicitudesDto> {
 
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
-      notificationDto.userOrigin = request.solicitante?.id;
+      // notificationDto.userOrigin = request.solicitante?.id;
       notificationDto.destinyType = notifyEnum.USERS;
       // Adiciono el destino
       notificationDto.destinyID = request.solicitante?.id

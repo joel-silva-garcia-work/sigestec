@@ -3,11 +3,11 @@ import { IsArray, IsEnum, IsNotEmpty, IsString, IsUUID } from "class-validator";
 import { notifyEnum } from "./../../../common/enum/notify.enum";
 
 export class CreateNotificationDto {
-    @ApiProperty()
-    @IsString()
-    @IsUUID()
-    @IsNotEmpty()
-    userOrigin: string
+    // @ApiProperty()
+    // @IsString()
+    // @IsUUID()
+    // @IsNotEmpty()
+    // userOrigin: string
 
     @ApiProperty({ type:String })
     @IsString()
