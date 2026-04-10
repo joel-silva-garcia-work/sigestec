@@ -329,11 +329,7 @@ UpdateOrdenesDto> {
         );
       }
     }
-    console.log(this.buildOrderNotificationDto({
-      // userOrigin: userOriginClose,
-      destinyID: solicitud.solicitante.id,
-      message: msgCierre,
-    }),)
+
     return {
       isSuccess: true,
       message: 'Estados actualizados correctamente',

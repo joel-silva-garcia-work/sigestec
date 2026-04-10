@@ -45,6 +45,24 @@ UpdateSolicitudesDto> {
     super(repository)
   }
 
+  private buildRequestNotificationDto(params: {
+    destinyID: string;
+    message: string;
+    destinyType?: notifyEnum;
+    isOrder?: boolean;
+  }): CreateNotificationDto {
+    const dto = new CreateNotificationDto();
+    dto.destinyID = params.destinyID;
+    dto.destinyType = params.destinyType ?? notifyEnum.USERS;
+    dto.isOrder = params.isOrder ?? false;
+    dto.message = params.message;
+    return dto;
+  }
+
+  private async sendAndSaveNotification(dto: CreateNotificationDto) {
+    return this.notificationService.create(dto);
+  }
+
   override async findAllItems() {
     return super.findAllItems();
   }
@@ -166,7 +184,7 @@ UpdateSolicitudesDto> {
         id: solicitud.solicitante.id
       }
     });
-    notificationDto.message = `Solicitud ${solicitud.codigo} ha sido creada por ${userOrigin.name}`
+    notificationDto.message = `Solicitud ${solicitud.codigo} ha sido evaluada con una calificación de ${solicitud.evaluacion}`;
     notificationDto.isRead = false
     // Determino el tipo de notificacion entre solicitud y Orden
     notificationDto.isOrder = false
@@ -241,7 +259,8 @@ UpdateSolicitudesDto> {
     const solicitud = await this.repository.findOne({
       where: {
         id: dto.id
-      }
+      },
+      relations: ['solicitante'],
     });
     if (!solicitud) {
       return {
@@ -261,6 +280,22 @@ UpdateSolicitudesDto> {
     solicitud.estado = SolEstadoEnum.CANCELAR;
     await this.repository.save(solicitud);
     this.trazaRepository.save(traza);
+
+    const jefesTaller = await this.userRepository.find({
+      where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
+    });
+
+    const solicitanteName = solicitud.solicitante?.name ?? 'el solicitante';
+    const msgCancel = `La solicitud ${solicitud.codigo} ha sido cancelada por ${solicitanteName}.`;
+    for (const jefe of jefesTaller) {
+      await this.sendAndSaveNotification(
+        this.buildRequestNotificationDto({
+          destinyID: jefe.id,
+          message: msgCancel,
+        }),
+      );
+    }
+
     return {
       isSuccess: true,
       data: solicitud,
@@ -462,30 +497,15 @@ UpdateSolicitudesDto> {
       where: { rol: { id: '019bd3ad-aecd-4607-b469-8f8ea90dcb3f' } },
     });
 
-    const destinyUser = jefesTaller.map((user) => ({
-      id: user.id,
-      isSolititudRead: false,
-      isOrderRead: false,
-      servicioID: request.id,
-      orderID: null,
-    }));
 
-    if (request.solicitante?.id) {
-      destinyUser.push({
-        id: request.solicitante.id,
-        isSolititudRead: false,
-        isOrderRead: false,
-        servicioID: request.id,
-        orderID: null,
-      });
-    }
+
 
       const notificationDto = new CreateNotificationDto();
       // Añado el solicitante y el tipo de destinatario
       // notificationDto.userOrigin = request.solicitante?.id;
       notificationDto.destinyType = notifyEnum.USERS;
       // Adiciono el destino
-      notificationDto.destinyID = request.solicitante?.id
+      notificationDto.destinyID = request.solicitante.id
       // obtengo el usuario origen para format el mensaje
 
       notificationDto.isRead = false
